@@ -15,10 +15,10 @@ public abstract class BasicRemoteInstance<T extends jp.nyatla.mimic.mbedjs.McuBi
 	/**
 	 * This function deletes remote instance from remote mcu.
 	 */
-	public void dispose()
+	public boolean dispose()
 	{
 		try {
-			this._inst.dispose();
+			return this._inst.dispose();
 		} catch (MbedJsException e) {
 			throw new RuntimeException(e);
 		}

@@ -42,9 +42,13 @@ public class BusOut extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.B
 			throw new RuntimeException(e);
 		}
 	}
-	public void write(int i_value) throws MbedJsException
+	public void write(int i_value)
 	{
-		this._inst.write(i_value);
+		try {
+			this._inst.write(i_value);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
 	}	
 	public int read()
 	{
