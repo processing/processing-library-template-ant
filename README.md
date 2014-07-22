@@ -2,7 +2,7 @@ mbedJS-Processing-API
 ===============
 
 
-mbedJSのProcessingインタフェイスライブラリです。ネットワーク接続したmbedをProcessingから制御することができます。
+mbedJSのProcessingインタフェイスです。ネットワーク接続したmbedをProcessingから制御することができます。
 
 mbedJSはこちらからダウンロードしてください。  
 mbedJS(mbed.org) https://mbed.org/users/nyatla/code/mbedJS/
