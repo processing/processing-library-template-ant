@@ -1,7 +1,7 @@
 package jp.nyatla.mimic.mbedjs.psgapi;
 
 /**
- * Javaオブジェクトをラップするクラスを定義します。
+ * Base class of java object wrapper
  * @param <T>
  */
 public abstract class JavaObjectWrapper<T>

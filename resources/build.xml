@@ -217,6 +217,7 @@ ${line}
 				stylesheetfile="resources/stylesheet.css" 
 				doctitle="Javadocs: ${project.name}" 
 				public="true" version="false" 
+				encoding="UTF-8"
 				windowtitle="Javadocs: ${project.name}">
  			
  			<link href="${javadoc.java.href}" />

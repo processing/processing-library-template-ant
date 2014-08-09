@@ -1,6 +1,8 @@
 package jp.nyatla.mimic.mbedjs.psgapi.driver;
 import jp.nyatla.mimic.mbedjs.MbedJsException;
-import jp.nyatla.mimic.mbedjs.psgapi.*;
+import jp.nyatla.mimic.mbedjs.psgapi.I2C;
+import jp.nyatla.mimic.mbedjs.psgapi.Mcu;
+import jp.nyatla.mimic.mbedjs.psgapi.JavaObjectWrapper;
 /**
  * LM75B device driver class.
  * This class has the same functions as <a href="https://mbed.org/users/neilt6/code/LM75B/">https://mbed.org/users/neilt6/code/LM75B/</a>.
