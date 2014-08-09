@@ -25,30 +25,40 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  * This class holds a session to mbedJS.
  * This is required when to generate a class of other peripherals.
  */
-public class Mcu
+public class Mcu extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.Mcu>
 {
-	jp.nyatla.mimic.mbedjs.javaapi.Mcu _inst;
+	private static jp.nyatla.mimic.mbedjs.javaapi.Mcu _new(String i_addr){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.Mcu(i_addr);
+		}catch(MbedJsException e){
+			throw new RuntimeException(e);
+		}
+	}	
 	PApplet _parent;
 	public Mcu(PApplet i_parent,String i_addr)
 	{
-		try {
-			this._parent=i_parent;
-			this._parent.registerMethod("dispose", this);
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.Mcu(i_addr);
-		} catch (MbedJsException e) {
-			throw new RuntimeException(e);
-		}
+		super(_new(i_addr));
+		this._parent=i_parent;
+		this._parent.registerMethod("dispose", this);
+	}
+	/**
+	 * ラップしているJavaインスタンスを返します。
+	 * @return
+	 */
+	public jp.nyatla.mimic.mbedjs.javaapi.Mcu getBaseInstance()
+	{
+		return _inst;
 	}
 	public void dispose()
 	{
-		if(this._inst!=null){
-			this.shutdown();
-		}
+		this.shutdown();
 	}
 	public void shutdown()
 	{
-		this._inst.shutdown();
-		this._inst=null;
+		if(this._inst!=null){
+			this._inst.shutdown();
+			this._inst=null;
+		}
 	}
 	/**
 	 * The return value object of {@link #getInfo}

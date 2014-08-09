@@ -25,13 +25,15 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class PwmOut extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.PwmOut>
 {
-	
-	public PwmOut(Mcu i_mcu,int i_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.PwmOut(i_mcu._inst,i_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.PwmOut _new(Mcu i_mcu,int i_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.PwmOut(i_mcu._inst,i_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}		
+	public PwmOut(Mcu i_mcu,int i_pin){
+		super(_new(i_mcu,i_pin));
 	}
 	public void write(float i_value)
 	{

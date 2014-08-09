@@ -26,13 +26,16 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class AnalogOut extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.AnalogOut>
 {
-	public AnalogOut(Mcu i_mcu,int i_pin)
-	{
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.AnalogOut(i_mcu._inst,i_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.AnalogOut _new(Mcu i_mcu,int i_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.AnalogOut(i_mcu._inst,i_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}
+	public AnalogOut(Mcu i_mcu,int i_pin)
+	{
+		super(_new(i_mcu,i_pin));
 	}
 	public float read()
 	{

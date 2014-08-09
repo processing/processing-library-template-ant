@@ -25,6 +25,13 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class BusIn extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.BusIn>
 {
+	private static jp.nyatla.mimic.mbedjs.javaapi.BusIn _new(Mcu i_mcu,int... i_pins){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.BusIn(i_mcu._inst,i_pins);
+		}catch(MbedJsException e){
+			throw new RuntimeException(e);
+		}
+	}	
 	/**
 	 * @param i_mcu
 	 * @param i_pins
@@ -34,11 +41,7 @@ public class BusIn extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.Bu
 	 */
 	public BusIn(Mcu i_mcu,int... i_pins)
 	{
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.BusIn(i_mcu._inst, i_pins);
-		} catch (MbedJsException e) {
-			throw new RuntimeException(e);
-		}
+		super(_new(i_mcu,i_pins));
 	}
 	public int read()
 	{

@@ -25,13 +25,15 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class PortIn extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.PortIn>
 {
-	
-	public PortIn(Mcu i_mcu,int i_port,int i_mask){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.PortIn(i_mcu._inst,i_port,i_mask);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.PortIn _new(Mcu i_mcu,int i_port,int i_mask){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.PortIn(i_mcu._inst,i_port,i_mask);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}	
+	public PortIn(Mcu i_mcu,int i_port,int i_mask){
+		super(_new(i_mcu,i_port,i_mask));
 	}
 	public int read(){
 		try {

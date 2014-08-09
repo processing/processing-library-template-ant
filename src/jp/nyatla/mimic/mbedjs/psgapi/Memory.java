@@ -23,12 +23,10 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  * This class is Memory reader/writer.
  * It can read/writes memory on remote mcu directly.
  */
-public class Memory
+public class Memory extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.Memory>
 {
-	protected jp.nyatla.mimic.mbedjs.javaapi.Memory _inst;
-	
 	public Memory(Mcu i_mcu){
-		this._inst=new jp.nyatla.mimic.mbedjs.javaapi.Memory(i_mcu._inst);
+		super(new jp.nyatla.mimic.mbedjs.javaapi.Memory(i_mcu._inst));
 	}
 	/**
 	 * This function reads byte(s) from the remote mcu memory.

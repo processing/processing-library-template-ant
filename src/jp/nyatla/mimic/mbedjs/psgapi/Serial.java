@@ -30,13 +30,15 @@ public class Serial extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.S
 	public final static int Even=jp.nyatla.mimic.mbedjs.javaapi.Serial.Even;
 	public final static int Forced1=jp.nyatla.mimic.mbedjs.javaapi.Serial.Forced1;
 	public final static int Forced0=jp.nyatla.mimic.mbedjs.javaapi.Serial.Forced0;
-
-	public Serial(Mcu i_mcu,int i_tx_pin,int i_rx_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.Serial(i_mcu._inst,i_tx_pin,i_rx_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.Serial _new(Mcu i_mcu,int i_tx_pin,int i_rx_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.Serial(i_mcu._inst,i_tx_pin,i_rx_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}
+	public Serial(Mcu i_mcu,int i_tx_pin,int i_rx_pin){
+		super(_new(i_mcu,i_tx_pin,i_rx_pin));
 	}
 	/**
 	 * This function set format parameter.

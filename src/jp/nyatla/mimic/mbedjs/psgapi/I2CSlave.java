@@ -29,13 +29,15 @@ public class I2CSlave extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi
 	public final static int ReadAddressed=jp.nyatla.mimic.mbedjs.javaapi.I2CSlave.ReadAddressed;
 	public final static int WriteGeneral=jp.nyatla.mimic.mbedjs.javaapi.I2CSlave.WriteGeneral;
 	public final static int WriteAddressed=jp.nyatla.mimic.mbedjs.javaapi.I2CSlave.WriteAddressed;
-
-	public I2CSlave(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.I2CSlave(i_mcu._inst,i_sda_pin,i_scl_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.I2CSlave _new(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.I2CSlave(i_mcu._inst,i_sda_pin,i_scl_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}
+	public I2CSlave(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
+		super(_new(i_mcu,i_sda_pin,i_scl_pin));
 	}
 	public void frequency(int i_hz){
 		try {

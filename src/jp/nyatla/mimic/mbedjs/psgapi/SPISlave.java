@@ -24,12 +24,15 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class SPISlave extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.SPISlave>
 {
-	public SPISlave(Mcu i_mcu,int i_mosi_pin,int i_miso_pin,int i_sclk_pin,int i_ssel_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.SPISlave(i_mcu._inst,i_mosi_pin,i_miso_pin,i_sclk_pin,i_ssel_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.SPISlave _new(Mcu i_mcu,int i_mosi_pin,int i_miso_pin,int i_sclk_pin,int i_ssel_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.SPISlave(i_mcu._inst,i_mosi_pin,i_miso_pin,i_sclk_pin,i_ssel_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}		
+	public SPISlave(Mcu i_mcu,int i_mosi_pin,int i_miso_pin,int i_sclk_pin,int i_ssel_pin){
+		super(_new(i_mcu,i_mosi_pin,i_miso_pin,i_sclk_pin,i_ssel_pin));
 	}	
 	public void frequency(int i_value){
 		try {

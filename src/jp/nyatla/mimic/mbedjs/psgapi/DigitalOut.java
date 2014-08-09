@@ -26,19 +26,25 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class DigitalOut extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.DigitalOut>
 {
-	public DigitalOut(Mcu i_mcu,int i_pin,int i_val){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.DigitalOut(i_mcu._inst,i_pin,i_val);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.DigitalOut _new(Mcu i_mcu,int i_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.DigitalOut(i_mcu._inst,i_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}	
+	private static jp.nyatla.mimic.mbedjs.javaapi.DigitalOut _new(Mcu i_mcu,int i_pin,int i_val){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.DigitalOut(i_mcu._inst,i_pin,i_val);
+		}catch(MbedJsException e){
+			throw new RuntimeException(e);
+		}
+	}	
+	public DigitalOut(Mcu i_mcu,int i_pin,int i_val){
+		super(_new(i_mcu,i_pin,i_val));
 	}
 	public DigitalOut(Mcu i_mcu,int i_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.DigitalOut(i_mcu._inst,i_pin);
-		} catch (MbedJsException e) {
-			throw new RuntimeException(e);
-		}
+		super(_new(i_mcu,i_pin));
 	}
 	public void write(int i_value){
 		try {

@@ -26,13 +26,15 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class I2C extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.I2C>
 {
-
-	public I2C(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.I2C(i_mcu._inst,i_sda_pin,i_scl_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.I2C _new(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.I2C(i_mcu._inst,i_sda_pin,i_scl_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}
+	public I2C(Mcu i_mcu,int i_sda_pin,int i_scl_pin){
+		super(_new(i_mcu,i_sda_pin,i_scl_pin));
 	}
 	public void frequency(int i_hz){
 		try {

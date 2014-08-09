@@ -25,13 +25,15 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class DigitalIn extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.DigitalIn>
 {
-	
-	public DigitalIn(Mcu i_mcu,int i_pin){
-		try {
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.DigitalIn(i_mcu._inst,i_pin);
-		} catch (MbedJsException e) {
+	private static jp.nyatla.mimic.mbedjs.javaapi.DigitalIn _new(Mcu i_mcu,int i_pin){
+		try{
+			return new jp.nyatla.mimic.mbedjs.javaapi.DigitalIn(i_mcu._inst,i_pin);
+		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}	
+	public DigitalIn(Mcu i_mcu,int i_pin){
+		super(_new(i_mcu,i_pin));
 	}
 	public int read(){
 		try {

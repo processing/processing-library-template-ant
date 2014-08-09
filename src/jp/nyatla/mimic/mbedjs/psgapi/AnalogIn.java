@@ -26,13 +26,16 @@ import jp.nyatla.mimic.mbedjs.MbedJsException;
  */
 public class AnalogIn extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.AnalogIn>
 {
-	public AnalogIn(Mcu i_mcu,int i_pin)
-	{
+	private static jp.nyatla.mimic.mbedjs.javaapi.AnalogIn _new(Mcu i_mcu,int i_pin){
 		try{
-			this._inst=new jp.nyatla.mimic.mbedjs.javaapi.AnalogIn(i_mcu._inst,i_pin);
+			return new jp.nyatla.mimic.mbedjs.javaapi.AnalogIn(i_mcu._inst,i_pin);
 		}catch(MbedJsException e){
 			throw new RuntimeException(e);
 		}
+	}
+	public AnalogIn(Mcu i_mcu,int i_pin)
+	{
+		super(_new(i_mcu,i_pin));
 	}
 	public float read()
 	{
