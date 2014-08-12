@@ -1,10 +1,11 @@
 package jp.nyatla.mimic.mbedjs.psgapi.driver;
 
 import jp.nyatla.mimic.mbedjs.MbedJsException;
-import jp.nyatla.mimic.mbedjs.psgapi.*;
+import jp.nyatla.mimic.mbedjs.psgapi.JavaObjectWrapper;
+import jp.nyatla.mimic.mbedjs.psgapi.Mcu;
 /**
  * TextLCD device driver class.
- * This class has the same functions as <a href="http://mbed.org/users/wim/code/TextLCD//">http://mbed.org/users/wim/code/TextLCD/</a>.
+ * This class has the same functions as <a href="http://mbed.org/users/simon/code/TextLCD/">http://mbed.org/users/simon/code/TextLCD/</a>.
  */
 public class TextLCD  extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.driver.TextLCD>
 {
