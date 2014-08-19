@@ -104,6 +104,19 @@ public class Serial extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.S
 			throw new RuntimeException(e);
 		}
 	}
+	/**
+	 * シリアルポートへバイト配列を出力します。
+	 * @param i_data
+	 * @return
+	 */
+	public int puts(byte[] i_data){
+		try {
+			return this._inst.puts(i_data);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public int getc(){
 		try {
 			return this._inst.getc();
@@ -111,13 +124,35 @@ public class Serial extends BasicRemoteInstance<jp.nyatla.mimic.mbedjs.javaapi.S
 			throw new RuntimeException(e);
 		}
 	}
+	/**
+	 * ASCII文字列をシリアルポートから取得します。
+	 * {@link #gets(int, char)}の'a'指定と同じです。
+	 * @param i_len
+	 * 取得する文字列長さ又はバイト単位のデータ長
+	 * @return
+	 */
 	public String gets(int i_len){
+		return (String)this.gets(i_len,'a');
+	}
+	/**
+	 * ASCII文字列またはバイナリデータ列をシリアルポートから取得します。
+	 * @param i_len
+	 * 取得する文字列長さ又はバイト単位のデータ長
+	 * @param i_mode
+	 * 'a'=ASCII,'b'=バイナリ
+	 * @return
+	 * <ul>
+	 * <li>'a' - String
+	 * <li>'b' - byte[]
+	 * </ul>
+	 */
+	public Object gets(int i_len,char i_mode){
 		try {
-			return this._inst.gets(i_len);
+			return this._inst.gets(i_len,i_mode);
 		} catch (MbedJsException e) {
 			throw new RuntimeException(e);
 		}
-	}
+	}	
 	public void baud(int i_baudrate)
 	{
 		try {
