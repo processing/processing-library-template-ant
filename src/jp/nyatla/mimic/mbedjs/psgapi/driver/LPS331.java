@@ -48,4 +48,61 @@ public class LPS331 extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.dri
 			throw new RuntimeException(e);
 		}
 	}
+	public boolean isAvailable()
+	{
+		try {
+			return this._inst.isAvailable();
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public void setResolution(int i_pressure_avg,int i_temp_avg) 
+	{
+		try {
+			this._inst.setResolution(i_pressure_avg, i_temp_avg);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public void setActive(boolean i_is_active) 
+	{
+		try {
+			this._inst.setActive(i_is_active);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public void setDataRate(int i_datarate)
+	{
+		try {
+			this._inst.setDataRate(i_datarate);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public float getPressure()
+	{
+		try {
+			return this._inst.getPressure();
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public float getTemperature()
+	{
+		try {
+			return this._inst.getTemperature();
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public byte[] _read_multibyte(byte i_startsubaddress,int i_count)
+	{
+		try {
+			return this._inst._read_multibyte(i_startsubaddress, i_count);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }
