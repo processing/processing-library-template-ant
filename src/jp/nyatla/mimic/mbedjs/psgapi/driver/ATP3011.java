@@ -77,5 +77,6 @@ public class ATP3011 extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.dr
 	}
 	
 	
+	
 
 }
