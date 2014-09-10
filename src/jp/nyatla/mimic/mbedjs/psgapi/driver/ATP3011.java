@@ -67,7 +67,14 @@ public class ATP3011 extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaapi.dr
 			throw new RuntimeException(e);	
 		}
 	}
-	
+	public boolean isBusy()
+	{
+		try {
+			return this._inst.isBusy();
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);	
+		}
+	}
 	
 	
 
