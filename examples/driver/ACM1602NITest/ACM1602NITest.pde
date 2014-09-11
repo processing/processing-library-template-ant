@@ -3,13 +3,15 @@ import jp.nyatla.mimic.mbedjs.psgapi.*;
 
 Mcu mcu=new Mcu(this,"192.168.128.39");
 
-LM75B a=new LM75B(mcu,PinName.p28,PinName.p27,0x90);
+ACM1602NI a=new ACM1602NI(mcu,PinName.p28,PinName.p27,0x50);
 
 void setup()
 {
 }
 void draw()
 {
-  println(a.read());
+  a.puts("Hello mbedJS!");
 }
+
+
 
