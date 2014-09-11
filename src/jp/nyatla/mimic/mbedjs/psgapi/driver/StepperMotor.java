@@ -32,5 +32,21 @@ public class StepperMotor extends JavaObjectWrapper<jp.nyatla.mimic.mbedjs.javaa
 		}
 	}
 	public void rotate(int i_step , int i_wait_ms)
-public void close()
+	{
+		try {
+			this._inst.rotate(i_step, i_wait_ms);
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void close()
+	{
+		try {
+			this._inst.close();
+		} catch (MbedJsException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }
