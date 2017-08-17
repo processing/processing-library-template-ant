@@ -3,9 +3,10 @@ package tmiengine.library.world;
 import fisica.FBox;
 import tmiengine.library.world.interfaces.TMIobjectsInterface;
 
-class testObject extends FBox implements TMIobjectsInterface {
+class TestObject extends FBox implements TMIobjectsInterface
+{
 
-	testObject()
+	TestObject()
 	{
 		super(40, 40);
 	}

@@ -7,11 +7,7 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 //Fisica library
 import fisica.*;
-import tmiengine.library.world.interfaces.TMIobjectsInterface;
-import tmiengine.library.world.interfaces.TMIworldInterface;
-import tmiengine.library.world.interfaces.TMIworldMode;
-//objects
-import tmiengine.library.world.*;
+import tmiengine.library.world.interfaces.*;
 
 //world class
 public class TMIworld implements TMIworldInterface {
@@ -42,11 +38,10 @@ public class TMIworld implements TMIworldInterface {
 	
 	
 	//constructor
-	TMIworld()
+	public TMIworld()
 	{
 		//creates the world with the given edges
 		world=new FWorld();
-		parentSketch.println(new testObject());
 	}
 	
 	@Override
