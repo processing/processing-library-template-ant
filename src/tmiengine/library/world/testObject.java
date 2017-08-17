@@ -1,7 +1,7 @@
-package tmiengine.library.world.objects;
+package tmiengine.library.world;
 
-import tmiengine.library.world.objects.objectsInterfaces.TMIobjectsInterface;
 import fisica.FBox;
+import tmiengine.library.world.interfaces.TMIobjectsInterface;
 
 class testObject extends FBox implements TMIobjectsInterface {
 

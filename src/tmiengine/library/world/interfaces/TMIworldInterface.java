@@ -1,7 +1,6 @@
-package tmiengine.library.world.worldInterfaces;
+package tmiengine.library.world.interfaces;
 
-//worldMode list
-import tmiengine.library.world.worldInterfaces.TMIworldMode;
+import tmiengine.library.world.interfaces.TMIworldMode;
 
 //base world interface
 public interface TMIworldInterface

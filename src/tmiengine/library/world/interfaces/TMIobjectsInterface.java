@@ -1,4 +1,4 @@
-package tmiengine.library.world.objects.objectsInterfaces;
+package tmiengine.library.world.interfaces;
 
 //base objects interface
 public interface TMIobjectsInterface

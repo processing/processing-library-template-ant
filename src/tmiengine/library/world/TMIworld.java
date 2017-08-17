@@ -1,22 +1,29 @@
 package tmiengine.library.world;
 
-//world interface
-import tmiengine.library.world.worldInterfaces.*;
-//base object interface
-import tmiengine.library.world.objects.objectsInterfaces.TMIobjectsInterface;
-//processing core
-import processing.core.*;
 //java arraylist
 import java.util.ArrayList;
+
+//processing core
+import processing.core.PApplet;
+//Fisica library
+import fisica.*;
+import tmiengine.library.world.interfaces.TMIobjectsInterface;
+import tmiengine.library.world.interfaces.TMIworldInterface;
+import tmiengine.library.world.interfaces.TMIworldMode;
+//objects
+import tmiengine.library.world.*;
 
 //world class
 public class TMIworld implements TMIworldInterface {
 	//variables
 	//parent sketch (where the library is being executed)
 	private PApplet parentSketch;
-	
+
 	//ArrayList of all world's objects
 	private ArrayList<TMIobjectsInterface> objects=new ArrayList();
+	
+	//Fisica world
+	FWorld world;
 	
 	//world status
 	//when the world starts, it is freezed
@@ -32,6 +39,15 @@ public class TMIworld implements TMIworldInterface {
 	
 	//internal dimensions
 	private double xPercent, yPercent;
+	
+	
+	//constructor
+	TMIworld()
+	{
+		//creates the world with the given edges
+		world=new FWorld();
+		parentSketch.println(new testObject());
+	}
 	
 	@Override
 	public void setWorldGravity(float Gx, float Gy) {

@@ -1,4 +1,4 @@
-package tmiengine.library.world.worldInterfaces;
+package tmiengine.library.world.interfaces;
 
 //defines available world modes
 public enum TMIworldMode
