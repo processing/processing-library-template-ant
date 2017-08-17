@@ -3,6 +3,7 @@
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/lorenzo-pc/eclipseWorkspace/libs/core.jar"/>
-	<classpathentry kind="lib" path="/home/lorenzo-pc/eclipseWorkspace/libs/fisica/library/fisica.jar"/>
+	<classpathentry kind="lib" path="/home/lorenzo-pc/git/TMIengine-library/lib/fisica/library/fisica.jar"/>
+	<classpathentry kind="lib" path="/home/lorenzo-pc/git/TMIengine-library/lib/fisica/library/JBox2D-2.0.1-b250-Library.jar"/>
 	<classpathentry kind="output" path="resources/code"/>
 </classpath>
