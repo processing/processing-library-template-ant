@@ -17,5 +17,6 @@ public interface TMIobjectsInterface
 	public void rotateOnce(); //rotates the object in four possible ways (if possible, depends on the object)
 	public void reflect(); //reflects the object in two possible ways (if possible, depends on the object)
 	public void manipulate(float W, float H); //modifies width and length of the object (if possible, depends on the object)
+	public void lock(); //locks an object to make it not anymore modifyable. This cannot be reversed
 	public boolean checkForOverlap(); //checks if objects are overlapped during edit mode
 }

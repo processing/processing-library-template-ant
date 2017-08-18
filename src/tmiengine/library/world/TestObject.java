@@ -82,6 +82,12 @@ class TestObject extends FBox implements TMIobjectsInterface
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void lock()
+	{
+		
+	}
 
 	@Override
 	public boolean checkForOverlap() {

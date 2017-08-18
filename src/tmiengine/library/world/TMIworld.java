@@ -107,6 +107,17 @@ public class TMIworld implements TMIworldInterface {
 	public void selectWorldMode(TMIworldMode mode)
 	{
 	}
+	
+	/**
+	 * getWorldMode - returns the current world mode.
+	 * 
+	 * @return mode The actual world mode
+	 */
+	@Override
+	public TMIworldMode getWorldMode()
+	{
+		return mode;
+	}
 
 	@Override
 	public void addToWorld(String object, float X, float Y, int rotation, boolean isFlipped)
@@ -116,25 +127,37 @@ public class TMIworld implements TMIworldInterface {
 	/**
 	 * removeFromWorld - removes objects from the world.
 	 * Providing a TMI object to this function, it will be eliminated from
-	 * the arrayList containing all the objects. The parameter pointer is a basic java
-	 * object pointer, but before trying to remove illegal objects from the
-	 * arrayList, the function will perform a check on the object implementation.
+	 * the arrayList containing all the objects. The parameter object must implements TMIobjectsInterface
+	 * in order to work.
 	 * 
 	 * @param object the object to remove from the world
 	 */
 	@Override
-	public void removeFromWorld(Object object)
+	public void removeFromWorld(TMIobjectsInterface object)
 	{
-		//checks wether an object is implementing TMIobjectsInterface
-		if(object instanceof TMIobjectsInterface)
-		{
-			//remove the object from the arrayList
-			objects.remove((TMIobjectsInterface)object);
-		}
-		else
-		{
-			System.out.println("ERROR--The passed object is not implementing TMIobjectsInterface. Skipping...");
-		}
+		//removes the object from the arrayList
+		objects.remove(object);
 	}
 
+	/**
+	 * moveTo - moves objects inside the world during edit mode, without making them escape.
+	 * This function must be called to move an object when the world is under edit from the user.
+	 * It allows objects to move calling their moveTo methods if the position is still into the edges of the world.
+	 * Even if the object is not completely inside the world, there won't be problems, because then the object would
+	 * not be placeable.
+	 * 
+	 * @param object The object to move
+	 * @param X The x axis coordinates where to move the object
+	 * @param Y The y axis coordinates where to move the object
+	 */
+	@Override
+	public void moveTo(TMIobjectsInterface object, float X, float Y)
+	{
+		//checks if coordinates are still into world edges
+		if(X>x1 && X<x2 && Y>y1 && Y<y2)
+		{
+			//calls object internal moveTo method
+			object.moveTo(X, Y);
+		}
+	}
 }
