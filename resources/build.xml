@@ -313,7 +313,9 @@ ${line}
     
 	<target name="parse.github" if="is.github">
 		<echo message="Inserting download link for github distribution"/>
-		<replaceregexp file="${file}" match="##library.download##" replace="${source.url}/releases/download/${library.prettyVersion}/${project.name}.zip" />
+		<!-- <replaceregexp file="${file}" match="##library.download##" replace="${source.url}/releases/download/${library.prettyVersion}/${project.name}.zip" />-->
+		<replaceregexp file="${file}" match="##library.download##" replace="${source.url}/releases/download/latest/${project.name}.zip" />
+
 	</target>
 
 	
