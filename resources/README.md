@@ -23,10 +23,10 @@ The folder structure for Library ##library.name## should be as follows:
 ```
 Processing
   libraries
-    ##library.name##
+    ##project.name##
       examples
       library
-        ##library.name##.jar
+        ##project.name##.jar
       reference
       src
 ```
