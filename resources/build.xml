@@ -39,6 +39,14 @@
         <os family="unix" />
 	</condition>
 	
+	<!-- set the distribution properties -->
+    <condition property="is.web">
+        <equals arg1="${project.dist.platform}" arg2="Web" />
+	</condition>
+	<condition property="is.github">
+        <equals arg1="${project.dist.platform}" arg2="GitHub" />
+	</condition>
+
 	
 	<property name="project.jar.name" value="${project.name}.jar"/>
 	<property name="project.src" location="src"/>
@@ -51,6 +59,7 @@
 	<property name="project.examples" location="examples"/>
 	<property name="project.reference" location="reference"/>
 	<property name="project.dist" location="distribution"/>
+	<property name="project.github" location="docs"/>
 	<property name="project.dist.version" location="distribution/${project.name}-${library.version}"/>
 	<property name="install.source" location="resources/README.md"/>
 	<property name="install.destination" location="${project.dist.version}/README.md"/>
@@ -113,7 +122,8 @@ ${line}
 		<antcall target="generate.install.library" />
 		<antcall target="generate.web" />
 	  	<antcall target="generate.zip" />	
-	  	<delete dir="${project.tmp}"/>
+		<antcall target="generate.github" />
+		<delete dir="${project.tmp}"/>
 	</target>
 	
 	
@@ -257,7 +267,13 @@ ${line}
     <!-- find and replace ##placeholder## keywords in a file -->
     <target name="parse.file">
         <echo message="${file}" />
-        
+		
+		<!-- distribution specific replacements -->
+		<antcall target="parse.web"/>
+		<antcall target="parse.github"/>
+		
+		<!-- common replacements -->
+		
         <replaceregexp file="${file}" match="##date##" replace="${date}" flags="g" />
         <replaceregexp file="${file}" match="##copyright##" replace="${library.copyright}" flags="g" />
         
@@ -290,6 +306,16 @@ ${line}
     </target>
 	
 	
+	<target name="parse.web" if="is.web">
+		<echo message="Inserting download link for web distribution"/>
+		<replaceregexp file="${file}" match="##library.download##" replace="./download/${project.name}-${library.version}.zip" />
+	</target>
+    
+	<target name="parse.github" if="is.github">
+		<echo message="Inserting download link for github distribution"/>
+		<replaceregexp file="${file}" match="##library.download##" replace="${source.url}/releases/tag/${library.version}" />
+	</target>
+
 	
 	<target name="generate.install.library" if="is.normal">	
 		<copy file="${install.source}" tofile="${install.destination}" />
@@ -326,6 +352,17 @@ ${line}
 	</target>
 	
 	
+
+	<!-- copy the web folder to the docs folder used by github pages -->
+	<target name="generate.github" if="is.github">
+		<delete dir="${project.github}" />
+		<mkdir dir="${project.github}" />
+		<copy todir="${project.github}">
+			<fileset dir="${project.dist.version}" />
+		</copy>
+	</target>
+
+
 	
 	<!-- parsing the examples folder -->
 	<target name="processExamples">

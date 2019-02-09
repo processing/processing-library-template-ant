@@ -1,3 +1,15 @@
+# Processing Library Template
+## Github Pages Brach
+
+This branch of the `processing library template` automatically publishes all documentation to the `docs` folder of the repository, so that you can use github pages to host the library.
+
+To clone this specific branch using git:
+
+	git clone -b github-pages https://github.com/bitcraftlab/processing-library-template.git
+
+
+## About
+
 The following describes how to set up a Processing Library project in Eclipse and build it successfully, and to make your Library ready for distribution.
 
 ## Import to Eclipse
