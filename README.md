@@ -1,12 +1,7 @@
 # Processing Library Template
 ## Github Pages Brach
 
-This branch of the `processing library template` automatically publishes all documentation to the `docs` folder of the repository, so that you can use github pages to host the library.
-
-To clone this specific branch using git:
-
-	git clone -b github-pages https://github.com/bitcraftlab/processing-library-template.git
-
+This fork of the `processing library template` automatically publishes all documentation to the `docs` folder of the repository, so that you can use github pages to host the library.
 
 ## About
 
