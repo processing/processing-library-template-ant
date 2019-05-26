@@ -1,19 +1,15 @@
-import template.library.*;
+import elementaryGUI.*;
 
-HelloLibrary hello;
+Component c;
+
+void settings() {
+  size(400, 400);
+}
 
 void setup() {
-  size(400,400);
-  smooth();
-  
-  hello = new HelloLibrary(this);
-  
-  PFont font = createFont("",40);
-  textFont(font);
+  c = new Component(this);
 }
 
 void draw() {
-  background(0);
-  fill(255);
-  text(hello.sayHello(), 40, 200);
+  c.display();
 }
