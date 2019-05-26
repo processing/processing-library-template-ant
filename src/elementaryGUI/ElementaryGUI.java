@@ -64,7 +64,4 @@ public class ElementaryGUI {
 	 * 
 	 * @return int
 	 */
-	public int getVariable() {
-		return myVariable;
-	}
 }
