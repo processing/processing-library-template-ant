@@ -7,18 +7,16 @@ public class UI implements Cloneable {
 	private int background;
 	private int foreground;
 
-	public UI() {
+	public UI(PApplet applet) {
 		background = applet.color(0);
 		foreground = applet.color(255);
-	}
-	
-	public UI(PApplet applet) {
 		this.applet = applet;
 	}
 
-	public UI(int background, int foreground) {
+	public UI(int background, int foreground, PApplet applet) {
 		this.setBackground(background);
 		this.setForeground(foreground);
+		this.applet = applet;
 	}
 
 	public void setBackground(int background) {
@@ -50,10 +48,11 @@ public class UI implements Cloneable {
 	public void displayText(Label label) { // Make Something for every component
 		applet.fill(this.getForeground());
 		applet.textSize(label.getTextSize());
-		applet.text(label.getText(), (float) (label.getWidth() - applet.textWidth(label.getText()) * 0.5),
+		applet.text(label.getText(), (float) ((label.getWidth() - applet.textWidth(label.getText())) * 0.5),
 				(float) ((label.getTextSize()) * 0.85 + (label.getHeight() - (label.getTextSize())) * 0.5));
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}

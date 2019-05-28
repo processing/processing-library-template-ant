@@ -3,14 +3,13 @@ package elementaryGUI;
 import processing.core.*;
 
 public class Label extends Component {
-	PApplet applet;
 	private float textSize;
 	private String text;
 
 	private boolean autoTextSize;
 
-	public Label() {
-		super();
+	public Label(PApplet applet) {
+		super(applet);
 		text = "";
 		textSize = 12;
 		autoTextSize = true;

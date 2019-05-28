@@ -2,24 +2,7 @@ package elementaryGUI;
 
 import processing.core.*;
 
-//import elementary.GUI.*;
-//
-//Component c;
-//
-//void settings() {
-//  size(400, 400);
-//}
-//
-//void setup() {
-//  c = new Component(this);
-//}
-//
-//void draw() {
-//  c.display();
-//}
-
-
-public class Component extends Displayable implements Cloneable{
+public class Component extends Displayable implements Cloneable {
 	public PApplet applet;
 
 	private Component parent;
@@ -29,23 +12,12 @@ public class Component extends Displayable implements Cloneable{
 	private PVector dimension;
 
 	private boolean hasParent;
-	
-	public void initializate() {
-		this.position = new PVector(0, 0);
-		this.dimension = new PVector(0, 0);
-		this.ui = new UI();
-//		isVisible = true;
-		this.hasParent = false;
-		
-	}
-
-	public Component() {
-		initializate();
-		this.applet = new PApplet();
-	}
 
 	public Component(PApplet applet) {
-		initializate();
+		this.position = new PVector(0, 0);
+		this.dimension = new PVector(0, 0);
+		this.ui = new UI(applet);
+		this.hasParent = false;
 		this.applet = applet;
 	}
 
@@ -127,7 +99,7 @@ public class Component extends Displayable implements Cloneable{
 
 	public void setParent(Component component) {
 		this.hasParent = true;
-		this.parent = new Component();
+		this.parent = new Component(applet);
 		this.parent = component;
 	}
 
@@ -135,7 +107,7 @@ public class Component extends Displayable implements Cloneable{
 		if (this.hasParent) {
 			return this.parent;
 		} else {
-			return new Component();
+			return new Component(applet);
 		}
 	}
 
@@ -149,6 +121,7 @@ public class Component extends Displayable implements Cloneable{
 		}
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}

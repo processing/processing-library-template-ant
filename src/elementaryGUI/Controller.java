@@ -13,7 +13,7 @@ import processing.core.*;
  * @example Hello
  */
 
-public class ElementaryGUI {
+public class Controller {
 
 	// myParent is a reference to the parent sketch
 	PApplet myParent;
@@ -29,7 +29,7 @@ public class ElementaryGUI {
 	 * @example Hello
 	 * @param theParent the parent PApplet
 	 */
-	public ElementaryGUI(PApplet theParent) {
+	public Controller(PApplet theParent) {
 		myParent = theParent;
 		welcome();
 	}
