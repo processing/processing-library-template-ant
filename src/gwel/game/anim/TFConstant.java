@@ -3,7 +3,7 @@ package gwel.game.anim;
 
 public class TFConstant extends TimeFunction {
 
-    public TFConstant() { this(0.0f); }
+    public TFConstant() { this(1.0f); }
 
     public TFConstant(float value) {
         params = new TFParam[] {

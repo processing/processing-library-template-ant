@@ -10,6 +10,7 @@ public class DrawableCircle extends DrawablePolygon {
     private float radius;
     private int segments;
 
+
     public DrawableCircle(float x, float y, float r) { this(x, y, r, 32); }
 
     public DrawableCircle(float x, float y, float r, int segments) {

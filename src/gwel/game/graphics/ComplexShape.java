@@ -18,12 +18,12 @@ import static gwel.game.graphics.Utils.pColorToGDXColor;
 import static processing.core.PConstants.*;
 
 
-public class ComplexShape implements Drawable {
+public class ComplexShape implements Shape {
     protected ComplexShape parent;
     private final ArrayList<ComplexShape> children;
-    private final ArrayList<Drawable> shapes; // CompleShapes and simple shapes
+    private final ArrayList<Shape> shapes; // CompleShapes and simple shapes
     private Animation[] animations;
-    private final Vector2 localOrigin;
+    private final Vector2 localOrigin;  // Pivot point
     private final Affine2 transform, oldTransform, nextTransform;
     private String id = "";
     private boolean transitioning = false;
@@ -41,7 +41,7 @@ public class ComplexShape implements Drawable {
         nextTransform = new Affine2();
     }
 
-    public void addShape(Drawable shape) {
+    public void addShape(Shape shape) {
         shapes.add(shape);
         if (shape instanceof ComplexShape) {
             children.add((ComplexShape) shape);
@@ -50,7 +50,7 @@ public class ComplexShape implements Drawable {
     }
 
     // Return all chilren (Drawables and ComplexShapes)
-    public ArrayList<Drawable> getShapes() {
+    public ArrayList<Shape> getShapes() {
       return shapes;
     }
 
@@ -89,7 +89,7 @@ public class ComplexShape implements Drawable {
 
     public void hardTransform(Affine2 transform) {
         transform.applyTo(localOrigin);
-        for (Drawable shape : shapes)
+        for (Shape shape : shapes)
             shape.hardTransform(transform);
         if (transform.m00 != 0) {
             // Must scale animation tree
@@ -174,7 +174,7 @@ public class ComplexShape implements Drawable {
     }
 
 
-    public void updateAnimation(float dtime) {
+    public void update(float dtime) {
         // dtime is in seconds
 
         if (transitioning) {
@@ -189,17 +189,17 @@ public class ComplexShape implements Drawable {
             transform.translate(-localOrigin.x, -localOrigin.y);
         } else if (animations.length > 0) {
             transform.setToTranslation(localOrigin);
-            for (int i=animations.length-1; i>=0; i--) {
+            for (int i = animations.length-1; i >= 0; i--) {
                 transform.mul(animations[i].update(dtime));
             }
             transform.translate(-localOrigin.x, -localOrigin.y);
         }
 
         for (ComplexShape child : children)
-            child.updateAnimation(dtime);
+            child.update(dtime);
     }
 
-    public void resetAnimation() {
+    public void reset() {
         if (animations.length > 0) {
             for (Animation anim : animations) {
                 anim.reset();
@@ -207,7 +207,7 @@ public class ComplexShape implements Drawable {
             transform.idt();
         }
         for (ComplexShape child : children)
-            child.resetAnimation();
+            child.reset();
     }
 
 
@@ -230,6 +230,7 @@ public class ComplexShape implements Drawable {
     }
 
 
+    // Maybe could put a "fixtransform" parameter here
     public void transitionAnimation(Animation[] nextAnims, float duration) {
       // duration is in seconds
         if (animations.length > 0) {
@@ -288,7 +289,7 @@ public class ComplexShape implements Drawable {
 
     public ComplexShape copy() {
         ComplexShape copy = new ComplexShape();
-        for (Drawable shape : shapes)
+        for (Shape shape : shapes)
             copy.addShape(shape.copy());
         copy.setLocalOrigin(localOrigin.x, localOrigin.y);
         Animation[] animList = new Animation[animations.length];
@@ -302,8 +303,7 @@ public class ComplexShape implements Drawable {
 
     // Used for processing animation editor
     public static ComplexShape fromPShape(PShape svgShape) {
-        Drawable shape = fromPShape(svgShape, new PMatrix3D(), 0);
-        System.out.println("class " + shape.getClass());
+        Shape shape = fromPShape(svgShape, new PMatrix3D(), 0);
         if (!(shape instanceof ComplexShape)) {
             ComplexShape cs = new ComplexShape();
             cs.addShape(shape);
@@ -313,13 +313,13 @@ public class ComplexShape implements Drawable {
     }
 
     // Used for processing animation editor
-    public static Drawable fromPShape(PShape svgShape, PMatrix3D matrix, int depth) {
+    public static Shape fromPShape(PShape svgShape, PMatrix3D matrix, int depth) {
         StringBuilder prefix = new StringBuilder();
 
         for (int i=0; i<depth; i++)
             prefix.append('-');
 
-        Drawable shape = null;
+        Shape shape = null;
         int family = svgShape.getFamily();
         int kind = svgShape.getKind();
         int childCount = svgShape.getChildCount();
@@ -331,7 +331,7 @@ public class ComplexShape implements Drawable {
             ComplexShape cs = new ComplexShape();
             cs.setId(svgShape.getName());
             for (PShape child : svgShape.getChildren()) {
-                Drawable childShape = fromPShape(child, matrix.get(), depth+1);
+                Shape childShape = fromPShape(child, matrix.get(), depth+1);
                 if (childShape != null)
                     cs.addShape(childShape);
             }
@@ -456,9 +456,7 @@ public class ComplexShape implements Drawable {
 
     public static ComplexShape fromJson(JsonValue json) {
         ComplexShape cs = new ComplexShape();
-
         cs.setId(json.getString("id"));
-        System.out.println("id " + cs.getId());
         if (json.has("shapes")) {
             for (JsonValue shape : json.get("shapes")) {
                 if (shape.has("type")) {  // Treat as simple shape
@@ -477,18 +475,15 @@ public class ComplexShape implements Drawable {
                         p.setColor(c[0], c[1], c[2], c[3]);
 
                         cs.addShape(p);
-                        System.out.println(p);
                     } else if (type.equals("circle")) {
                         float[] params = shape.get("params").asFloatArray();
                         DrawableCircle c = new DrawableCircle(params[0], params[1], params[2]);
                         float[] co = shape.get("color").asFloatArray();
                         c.setColor(co[0], co[1], co[2], co[3]);
                         cs.addShape(c);
-                        System.out.println(c);
                     }
                 } else if (shape.has("id")) {  // Treat as ComplexShape
                     cs.addShape(fromJson(shape));
-                    System.out.println("child " + cs.getShapes().get(cs.getShapes().size()-1));
                 }
             }
         }
@@ -506,7 +501,12 @@ public class ComplexShape implements Drawable {
         return cs;
     }
 
-
+    /**
+     * Delete if outside SgAnimator
+     *
+     * @return
+     */
+    /*
     public JSONObject toJSON() {
         JSONObject element = new JSONObject();
         element.setString("id", getId());
@@ -573,6 +573,8 @@ public class ComplexShape implements Drawable {
 
         return element;
     }
+
+     */
 
     public JsonValue toJson(boolean saveAnim) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);

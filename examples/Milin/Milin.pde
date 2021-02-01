@@ -67,7 +67,7 @@ void draw() {
   //rect(0, 0, width, height);
   pushMatrix();
   translate(width/2, height/2);  
-  mill.updateAnimation(1f/frameRate);
+  mill.update(1f/frameRate);
   mill.draw(renderer);
 
   popMatrix();

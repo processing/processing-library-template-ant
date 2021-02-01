@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 import java.util.ArrayDeque;
 
@@ -20,14 +21,17 @@ import java.util.ArrayDeque;
 
 public class MyRenderer {
 	// myParent is a reference to the parent sketch
-	PApplet myParent;
-	Color color;
+	private PApplet myParent;
+	private PGraphics buffer;
+	private Color color;
 	public final ArrayDeque<Affine2> matrixStack;
 	private Affine2 transform;
 	public final static String VERSION = "##library.prettyVersion##";
 	private ComplexShape selected;
 	static public final Color selectedColor = new Color(0.0f, 1.0f, 0.0f, 0.6f);
 	private boolean wireframe = false;
+	private boolean recording = false;
+	private int frameNumber;
 
 
 	public MyRenderer(PApplet theParent) {
@@ -37,7 +41,7 @@ public class MyRenderer {
 		matrixStack = new ArrayDeque<>();
 		matrixStack.push(new Affine2());
 
-		System.out.println("spaceGame Renderer initiated...");
+		System.out.println("Game renderer initiated...");
 	}
 
 
@@ -83,11 +87,16 @@ public class MyRenderer {
 	}
 
 
-	// Used for the animation editor
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public void setSelected(ComplexShape selected) {
 		this.selected = selected;
 	}
 
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public ComplexShape getSelected() {
 		return selected;
 	}
@@ -96,21 +105,34 @@ public class MyRenderer {
 	public void triangles(float[] vertices) {
 		Vector2 point = new Vector2();
 
+		if (recording) {
+			buffer.noStroke();
+			buffer.fill(Color.argb8888(color));
+			buffer.beginShape();
+		}
+
 		myParent.noStroke();
 		myParent.fill(Color.argb8888(color));
-
 		myParent.beginShape();
-		for (int i=0; i<vertices.length; i+=2) {
-			point.set(vertices[i], vertices[i + 1]);
+
+		for (int i = 0; i < vertices.length; i += 2) {
+			point.set(vertices[i], vertices[i+1]);
 			transform.applyTo(point);
 			myParent.vertex(point.x, point.y);
+			if (recording)
+				buffer.vertex(point.x, point.y);
 		}
+
 		myParent.endShape(myParent.CLOSE);
+		if (recording)
+			buffer.endShape(myParent.CLOSE);
 	}
+
 
 	public void triangles(float[] vertices, short[] indices) {
 		if (wireframe) {
 			myParent.stroke(Color.argb8888(color));
+			myParent.strokeWeight(1);
 			myParent.noFill();
 		} else {
 			triangles(vertices);
@@ -120,7 +142,7 @@ public class MyRenderer {
 		myParent.beginShape(myParent.TRIANGLES);
 		int idx;
 		Vector2 point = new Vector2();
-		for (int i=0; i<indices.length; ) {
+		for (int i = 0; i < indices.length; ) {
 			idx = indices[i++]<<1;
 			point.set(vertices[idx], vertices[idx+1]);
 			transform.applyTo(point);
@@ -140,7 +162,10 @@ public class MyRenderer {
 	}
 
 
-	// Used for compatibility with processing only
+	/**
+	 * Delete if outside SgAnimator
+	 */
+	/*
 	public void circle(float x, float y, float r) {
 		Vector2 point = new Vector2(x, y);
 		Vector2 radiusPoint = new Vector2(x+r, y);
@@ -157,10 +182,12 @@ public class MyRenderer {
 		transform.applyTo(radiusPoint);
 		r = point.dst(radiusPoint);
 		myParent.circle(point.x, point.y, 2*r);
-	}
+	}*/
 
 
-	// Used for the animation editor
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public void drawMarker(float x, float y) {
 		Vector2 point = new Vector2(x, y);
 		transform.applyTo(point);
@@ -174,7 +201,9 @@ public class MyRenderer {
 	}
 
 
-	// Used for the animation editor
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public void drawPivot() {
 		if (selected != null) {
 			Vector2 point = selected.getLocalOrigin();
@@ -188,7 +217,9 @@ public class MyRenderer {
 	}
 
 
-	// Used for the animation editor
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public void drawAxes() {
 		for (int i=1; i<=10; i++) {
 			Vector2 point = new Vector2(0f, -10*i);
@@ -205,9 +236,49 @@ public class MyRenderer {
 	}
 
 
-	// Used for the animation editor
+	/**
+	 * Delete if outside SgAnimator
+	 */
 	public void toggleWireframe() { wireframe = !wireframe; }
 
+
+	/**
+	 * Save the buffer to file if recording and clear buffer
+	 *
+	 * Delete if outside SgAnimator
+	 */
+	public void flush() {
+		if (recording) {
+			buffer.endDraw();
+			buffer.save(String.format("frames/frame-%03d.png", frameNumber++));
+			buffer.clear();
+			buffer.beginDraw();
+		}
+	}
+
+	/**
+	 * Shapes rendered will be saved to file
+	 *
+	 * Delete if outside SgAnimator
+	 */
+	public void startRecording() {
+		recording = true;
+		buffer = myParent.createGraphics(myParent.width, myParent.height);
+		buffer.beginDraw();
+		frameNumber = 0;
+	}
+
+	/**
+	 * Delete if outside SgAnimator
+	 */
+	public void stopRecording() {
+		recording = false;
+	}
+
+	/**
+	 * Delete if outside SgAnimator
+	 */
+	public boolean isRecording() { return recording; }
 
 	/**
 	 * return the version of the Library.

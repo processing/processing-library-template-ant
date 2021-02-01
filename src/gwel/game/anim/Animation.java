@@ -202,7 +202,6 @@ public class Animation {
     public Animation copy() {
         try {
             TimeFunction fnCopy = fn.getClass().newInstance();
-            System.out.println(fnCopy);
             fnCopy.setParams(fn.getParamsCopy());
             if (fnCopy instanceof TFTimetable)
                 ((TFTimetable) fnCopy).setTable(((TFTimetable) fn).getTable().clone());

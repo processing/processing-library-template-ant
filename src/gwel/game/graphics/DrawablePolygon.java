@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
 
 
-public class DrawablePolygon implements Drawable {
+public class DrawablePolygon implements Shape {
     protected float[] vertices;
     protected short[] indices;
     protected final Color colorOrig, colorMod;
@@ -96,6 +96,7 @@ public class DrawablePolygon implements Drawable {
         renderer.triangles(vertices, indices);
     }
 
+    // Delete if outside SgAnimator
     public void drawSelected(MyRenderer renderer) {
         renderer.setColor(MyRenderer.selectedColor);
         renderer.triangles(vertices);

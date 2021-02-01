@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Class used to edit animations in SgAnimator (Animation tool for Processing)
+ *
+ */
 public class AnimationCollection {
     private ArrayList<String> postureNames;
     private ArrayList<HashMap<String, Animation[]>> postures;
-    private HashMap<String, Animation[][]> animations;
-
 
     public AnimationCollection() {
         postureNames = new ArrayList<>();
@@ -24,14 +25,14 @@ public class AnimationCollection {
     }
 
 
-    public void addPosture(String animName, HashMap<String, Animation[]> posture) {
-        postureNames.add(animName);
+    public void addPosture(String postureName, HashMap<String, Animation[]> posture) {
+        postureNames.add(postureName);
         postures.add(posture);
     }
 
 
-    public void updatePosture(int idx, String animName, HashMap<String, Animation[]> posture) {
-        postureNames.set(idx, animName);
+    public void updatePosture(int idx, String postureName, HashMap<String, Animation[]> posture) {
+        postureNames.set(idx, postureName);
         postures.set(idx, posture);
     }
 
@@ -43,11 +44,11 @@ public class AnimationCollection {
 
     public HashMap<String, Animation[]> getPosture(String animName) {
         int idx = postureNames.indexOf(animName);
-        return postures.get(idx);
+        return getPosture(idx);
     }
 
 
-    public ArrayList<String> getPosturesNameList() {
+    public ArrayList<String> getPostureNames() {
         return postureNames;
     }
 
@@ -58,11 +59,11 @@ public class AnimationCollection {
         AnimationCollection animCollection = new AnimationCollection();
 
         for (JsonValue jsonPosture : jsonPostureArray.iterator()) {
-            HashMap<String, Animation[]> posture = new HashMap();
+            HashMap<String, Animation[]> posture = new HashMap<>();
             String animName = jsonPosture.getString("name");
             JsonValue groups = jsonPosture.get("groups");
             for (JsonValue group : groups.iterator()) {
-                ArrayList<Animation> animationList = new ArrayList();
+                ArrayList<Animation> animationList = new ArrayList<>();
                 String id = group.getString("id", "none");
                 JsonValue functions = group.get("functions");
                 for (JsonValue jsonAnimation : functions.iterator()) {
@@ -78,7 +79,6 @@ public class AnimationCollection {
     public JsonValue toJson() {
         JsonValue jsonAnimCollection = new JsonValue(JsonValue.ValueType.array);
         for (String postureName : postureNames) {
-            System.out.println(postureName);
             JsonValue groups = new JsonValue(JsonValue.ValueType.array);
             HashMap<String, Animation[]> posture = getPosture(postureName);
             // Every part in a posture
