@@ -14,6 +14,7 @@ public class AnimationCollection {
     private ArrayList<String> postureNames;
     private ArrayList<HashMap<String, Animation[]>> postures;
 
+
     public AnimationCollection() {
         postureNames = new ArrayList<>();
         postures = new ArrayList<>();

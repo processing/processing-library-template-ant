@@ -225,7 +225,7 @@ public class MyRenderer {
 			Vector2 point = new Vector2(0f, -10*i);
 			transform.applyTo(point);
 			myParent.stroke(0, 127);
-			if (i%10 == 0) {
+			if (i%5 == 0) {
 				myParent.strokeWeight(2);
 				myParent.line(point.x-8, point.y, point.x+8, point.y);
 			} else {

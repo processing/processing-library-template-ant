@@ -9,8 +9,7 @@ import gwel.game.utils.DummyPShape;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PVector;
-import processing.data.JSONArray;
-import processing.data.JSONObject;
+
 
 import java.util.ArrayList;
 
@@ -70,6 +69,13 @@ public class ComplexShape implements Shape {
 
     public void setLocalOrigin(float x, float y) {
         localOrigin.set(x, y);
+    }
+
+    /**
+     * Not implemented
+     */
+    public boolean contains(float x, float y) {
+        return false;
     }
 
 
