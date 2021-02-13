@@ -31,6 +31,7 @@ public class MyRenderer {
 	static public final Color selectedColor = new Color(0.0f, 1.0f, 0.0f, 0.6f);
 	private boolean wireframe = false;
 	private boolean recording = false;
+	private Color backgroundColor = new Color(1f, 1f, 1f, 0f);
 	private int frameNumber;
 
 
@@ -243,6 +244,13 @@ public class MyRenderer {
 
 
 	/**
+	 * Sets the background color when recording frames to disk
+	 *
+	 * Delete if outside SgAnimator
+	 */
+	public void setBackgroundColor(float r, float g, float b, float a) { backgroundColor.set(r, g, b, a); }
+
+	/**
 	 * Save the buffer to file if recording and clear buffer
 	 *
 	 * Delete if outside SgAnimator
@@ -253,6 +261,7 @@ public class MyRenderer {
 			buffer.save(String.format("frames/frame-%03d.png", frameNumber++));
 			buffer.clear();
 			buffer.beginDraw();
+			buffer.background(backgroundColor.r*255f, backgroundColor.g*255f, backgroundColor.b*255f, backgroundColor.a*255f);
 		}
 	}
 

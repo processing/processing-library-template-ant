@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import gwel.game.anim.Animation;
-import gwel.game.anim.AnimationCollection;
+import gwel.game.anim.PostureCollection;
 import gwel.game.anim.Posture;
 import gwel.game.graphics.*;
 
@@ -17,8 +17,9 @@ public class Avatar {
     public ComplexShape shape;
     private final Vector2 position = new Vector2();
     private final Affine2 transform = new Affine2();
-    private HashMap<String, Animation[][]> animations;  // Should have better perfs than animationCollection
-    private String[] postureNames;
+    public PostureCollection postures;
+    //private HashMap<String, Animation[][]> animations;  // Should have better perfs than animationCollection
+    //private String[] postureNames;
     private ComplexShape[] partsList;
     public ArrayList<Shape> physicsShapes;
     private float timeFactor = 1f;
@@ -67,63 +68,15 @@ public class Avatar {
     public ComplexShape[] getPartsList() { return partsList; }
 
 
-    public void setAnimationCollection(AnimationCollection collection) {
-        ArrayList<String> partsName = new ArrayList<>();
-        for (ComplexShape partShape : partsList) partsName.add(partShape.getId());
-
-        postureNames = collection.getPostureNames().toArray(new String[0]);
-        animations = new HashMap<>();
-        for (String postureName : postureNames) {
-            HashMap<String, Animation[]> posture = collection.getPosture(postureName);
-            Animation[][] postureArray = new Animation[partsList.length][];
-            // postureArray entries are left to 'null' if empty
-            Arrays.fill(postureArray, null);
-            for(Map.Entry<String, Animation[]> entry : posture.entrySet()) {
-                int idx = partsName.indexOf(entry.getKey());
-                if (idx >= 0)
-                    postureArray[idx] = entry.getValue();
-            }
-            animations.put(postureName, postureArray);
-        }
+    public String[] getPartsName() {
+        return shape.getIdList().toArray(new String[0]);
     }
 
     /**
-     * Rebuild an AnimationCollection from the animations array
-     *
-     * @return AnimationCollection
+     * Delete if outside Processing editor
      */
-    public AnimationCollection getAnimationCollection() {
-        AnimationCollection animationCollection = new AnimationCollection();
-        ArrayList<String> partsName = new ArrayList<>();
-        for (ComplexShape partShape : partsList) partsName.add(partShape.getId());
-
-        for (String postureName : postureNames) {
-            HashMap<String, Animation[]> posture = new HashMap<>();
-            for (String partName : partsName) {
-                int partIdx = partsName.indexOf(partName);
-                Animation[] partAnims = animations.get(postureName)[partIdx];
-                if (partAnims != null)
-                    posture.put(partName, partAnims);
-            }
-            animationCollection.addPosture(postureName, posture);
-        }
-        /*
-        for(Map.Entry<String, Animation[][]> entry : animations.entrySet()) {
-            String postureName = entry.getKey();
-            HashMap<String, Animation[]> posture = new HashMap<>();
-            for (String partName : partsName) {
-                int partIdx = partsName.indexOf(partName);
-                posture.put(partName, entry.getValue()[partIdx]);
-            }
-            animationCollection.addPosture(postureName, posture);
-        }*/
-
-        return animationCollection;
-    }
-
-
-    public String[] getPostureNames() {
-        return postureNames;
+    public String[] getPartsNamePre() {
+        return shape.getIdListPre("").toArray(new String[0]);
     }
 
 
@@ -132,9 +85,9 @@ public class Avatar {
         Set<String> ids = posture.keySet();
         for (ComplexShape part : partsList) {
             if (ids.contains(part.getId())) {
-                Animation[] partAnims;
-                partAnims = posture.get(part.getId());
-                part.transitionAnimation(partAnims, transition);
+                Animation[] animList;
+                animList = posture.get(part.getId());
+                part.transitionAnimation(animList, transition);
             } else {
                 part.transitionAnimation(new Animation[0], transition);
             }
@@ -149,18 +102,18 @@ public class Avatar {
 
     // Activate a posture from the collection
     public void loadPosture(int idx) {
-        loadPosture(postureNames[idx]);
+        loadPosture(postures.getPosture(idx));
     }
 
     // Activate a posture from the collection
     public void loadPosture(String postureName) {
-        System.out.println(postureName + " loaded");
-        Animation[][] posture = animations.get(postureName);
-        int i = 0;
-        for (Animation[] animList : posture) {
-            if (animList != null)
-                partsList[i].setAnimationList(animList);
-            i++;
+        loadPosture(postures.getPosture(postureName));
+    }
+
+    public void loadPosture(Posture posture) {
+        for (int i = 0; i < partsList.length; i++) {
+            Animation[] animList = posture.groups[i];
+            if (animList != null) partsList[i].setAnimationList(animList);
         }
     }
 
@@ -193,7 +146,9 @@ public class Avatar {
     }
 
 
-    // Delete if outside Processing editor
+    /**
+     * Delete if outside Processing editor
+     */
     public void drawSelectedOnly(MyRenderer renderer) {
         shape.drawSelectedOnly(renderer);
     }
@@ -225,8 +180,8 @@ public class Avatar {
 
         if (loadAnim && fromJson.has("animation")) {
             JsonValue jsonAnimation = fromJson.get("animation");
-            AnimationCollection animationCollection = AnimationCollection.fromJson(jsonAnimation);
-            avatar.setAnimationCollection(animationCollection);
+            PostureCollection animationCollection = PostureCollection.fromJson(jsonAnimation, avatar.getPartsName());
+            avatar.postures = animationCollection;
             if (animationCollection.size() > 0) {
                 avatar.loadPosture(0);
             }
@@ -246,14 +201,14 @@ public class Avatar {
                 }
             }
         }
-
         return avatar;
     }
+
 
     public void saveFile(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
 
-        json.addChild("animation", getAnimationCollection().toJson());
+        json.addChild("animation", postures.toJson(getPartsName()));
 
         JsonValue jsonPhysicsShapes = new JsonValue(JsonValue.ValueType.array);
         for (Shape shape : physicsShapes) {

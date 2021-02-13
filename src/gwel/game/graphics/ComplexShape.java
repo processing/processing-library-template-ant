@@ -71,6 +71,7 @@ public class ComplexShape implements Shape {
         localOrigin.set(x, y);
     }
 
+
     /**
      * Not implemented
      */
@@ -104,6 +105,14 @@ public class ComplexShape implements Shape {
         }
     }
 
+    public void hardTranslate(float x, float y) {
+        hardTransform(new Affine2().setToTranslation(x, y));
+    }
+
+    public void hardScale(float sx, float sy) {
+        hardTransform(new Affine2().setToScaling(sx, sy));
+    }
+
 
     public String getId() {
         return id;
@@ -128,8 +137,16 @@ public class ComplexShape implements Shape {
     public ArrayList<String> getIdList() {
         ArrayList<String> list = new ArrayList<>();
         list.add(id);
-        for (ComplexShape child : children) {
+        for (ComplexShape child : children)
             list.addAll(child.getIdList());
+        return list;
+    }
+
+    public ArrayList<String> getIdListPre(String pre) {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(pre + id);
+        for (ComplexShape child : children) {
+            for (String childId : child.getIdListPre("  ")) list.add(pre + childId);
         }
         return list;
     }
