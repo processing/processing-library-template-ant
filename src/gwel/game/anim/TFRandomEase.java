@@ -49,6 +49,12 @@ public class TFRandomEase extends TimeFunction {
                 easeTime = 0f;
             }
         }
+
+        if (moving) {
+            value = interpolation.apply(prevValue, targetValue, easeTime/(float) params[5].getValue());
+        } else {
+            value = targetValue;
+        }
     }
 
     @Override
@@ -59,15 +65,6 @@ public class TFRandomEase extends TimeFunction {
         prevValue = 0f;
         targetValue = (float) params[3].getValue() + MathUtils.random((float) params[2].getValue());
         interpolation = Animation.getInterpolation((String) params[4].getValue());
-    }
-
-    @Override
-    public float getValue() {
-        if (moving) {
-            return interpolation.apply(prevValue, targetValue, easeTime/(float) params[5].getValue());
-        } else {
-            return targetValue;
-        }
     }
 }
 

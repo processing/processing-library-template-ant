@@ -64,6 +64,8 @@ public class MyRenderer {
 		transform.scale(s, s);
 	}
 
+	public void scale(float sx, float sy) { transform.scale(sx, sy); }
+
 
 	public void pushMatrix() {
 		matrixStack.push(transform);

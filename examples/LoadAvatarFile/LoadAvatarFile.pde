@@ -13,7 +13,7 @@ void setup() {
   renderer.translate(width/2, height);
   renderer.scale(3);
   
-  renderer.startRecording();
+  //renderer.startRecording();
 }
 
 
@@ -22,7 +22,8 @@ void draw() {
   
   avatar.updateAnimation(1/frameRate);
   avatar.draw(renderer);
-  
+
+  /*
   if (frameCount < 30) {
     renderer.flush();
     fill(255, 0, 0);
@@ -30,4 +31,5 @@ void draw() {
   } else {
     renderer.stopRecording();
   }
+  */
 }

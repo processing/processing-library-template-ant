@@ -24,6 +24,10 @@ public class Avatar {
     public ArrayList<Shape> physicsShapes;
     private float timeFactor = 1f;
     private Posture currentPosture;
+    private boolean flipX = false;
+    private boolean flipY = false;
+    private float scaleX = 1;
+    private float scaleY = 1;
 
 
     public Avatar() {
@@ -34,11 +38,29 @@ public class Avatar {
     public void setPosition(float x, float y) { position.set(x, y); }
 
 
+    /**
+     * Scale geometry and animation data
+     *
+     * @param s
+     */
     public void scale(float s) {
         scale(s, s);
     }
 
-    public void scale(float sx, float sy) { transform.scale(sx, sy); }
+    /**
+     * Scale geometry and animation data
+     *
+     * @param sx
+     * @param sy
+     */
+    public void scale(float sx, float sy) {
+        scaleX = sx;
+        scaleY = sy;
+    }
+
+    public void setFlipX(boolean flip) { flipX = flip; }
+    public void setFlipY(boolean flip) { flipY = flip; }
+
 
     public void scalePhysics(float s) {
         Affine2 scaleTransform = new Affine2().setToScaling(s, s);
@@ -137,11 +159,11 @@ public class Avatar {
 
 
     public void draw(MyRenderer renderer) {
-        renderer.pushMatrix();
-        renderer.translate(position.x, position.y);
+        transform.setToTranslation(position.x, position.y);
+        transform.scale(flipX ? -scaleX : scaleX, flipY ? -scaleY : scaleY);
         renderer.pushMatrix(transform);
         shape.draw(renderer);
-        renderer.popMatrix();
+        //renderer.popMatrix();
         renderer.popMatrix();
     }
 

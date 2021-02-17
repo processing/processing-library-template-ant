@@ -81,6 +81,11 @@ public class Animation {
         setAxe(axe);
     }
 
+    public Animation(TimeFunction fn, int axe, float amp) {
+        this(fn, axe);
+        setAmp(amp);
+    }
+
 
     public static Interpolation getInterpolation(int n) {
         try {
@@ -162,6 +167,9 @@ public class Animation {
     }
 
 
+    public float getValue() { return value; }
+
+
     public float getRotation() {
         return axe==AXE_ROT ? value : 0.0f;
     }
@@ -237,12 +245,11 @@ public class Animation {
         try {
             String fullFunctionName = json.getString("function");
             // Dumb hack to read fully qualified function names
-            fullFunctionName.split(".");
             String[] parts = fullFunctionName.split("[.]");
-            Class c = Class.forName("gwel.game.anim." + parts[parts.length-1]);
-            TimeFunction fn = (TimeFunction) c.newInstance();
+            Class<?> c = Class.forName("gwel.game.anim." + parts[parts.length-1]);
+            TimeFunction fn = (TimeFunction) c.getDeclaredConstructor().newInstance();
             if (fn instanceof TFTimetable) {
-                float[] table = json.getChild("table").asFloatArray();
+                float[] table = json.get("table").asFloatArray();
                 ((TFTimetable) fn).setTable(table);
             }
             for (TFParam param : fn.getParams()) {
