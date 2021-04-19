@@ -87,6 +87,21 @@ public class DrawableCircle extends DrawablePolygon {
 
 
     @Override
+    public float[] getVertices() {
+        if (dirty)
+            computeVertices();
+        return vertices;
+    }
+
+    @Override
+    public short[] getIndices() {
+        if (dirty)
+            computeVertices();
+        return indices;
+    }
+
+
+    @Override
     public void hardTransform(Affine2 transform) {
         if (dirty)
             computeVertices();

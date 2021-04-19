@@ -60,6 +60,7 @@ public class Animation {
             "swing", "swingIn", "swingOut",
             "bounce", "bounceIn", "bounceOut"
     };
+    private String id;  // Not used for the moment
     private TimeFunction fn;
     private int axe;
     private float value;

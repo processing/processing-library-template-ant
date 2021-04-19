@@ -20,7 +20,7 @@ void draw() {
   background(255);
 
   for (Avatar mushroom : mushrooms) {
-    mushroom.updateAnimation(1/frameRate);
+    mushroom.update(1/frameRate);
     mushroom.draw(renderer);
   }
   
@@ -46,7 +46,7 @@ Avatar createMushroom(float x) {
     ComplexShape other = original.copy();
     float tilt = random(-25f, 25f);
     float phase1 = random(-180, 180);
-    float phase2 = phase1+180;
+    float phase2 = phase1 + 180;
     float phase3 = random(-180, 180);
     other.getAnimation(0).getFunction().setParam("phase", phase1);
     other.getAnimation(1).getFunction().setParam("phase", phase2);

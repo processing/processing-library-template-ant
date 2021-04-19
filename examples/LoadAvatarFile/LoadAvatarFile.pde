@@ -20,7 +20,7 @@ void setup() {
 void draw() {
   background(255);
   
-  avatar.updateAnimation(1/frameRate);
+  avatar.update(1/frameRate);
   avatar.draw(renderer);
 
   /*

@@ -16,6 +16,8 @@ public class DrawablePolygon implements Shape {
     public DrawablePolygon() {
         colorOrig = new Color(1, 1, 1, 1);
         colorMod = new Color(1, 1, 1, 1);
+        vertices = new float[0];
+        indices = new short[0];
     }
 
     public DrawablePolygon(float[] vertices, short[] indices) {

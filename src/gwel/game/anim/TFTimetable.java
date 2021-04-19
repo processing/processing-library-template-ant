@@ -41,6 +41,10 @@ public class TFTimetable extends TimeFunction {
     }
 
 
+    public void setEasing(String easingName) {
+        interp = Animation.getInterpolation(easingName);
+    }
+
     public void setEasingTable(int [] table) { easingTable = table; }
 
     public int[] getEasingTable() { return easingTable; }

@@ -252,6 +252,7 @@ public class MyRenderer {
 	 */
 	public void setBackgroundColor(float r, float g, float b, float a) { backgroundColor.set(r, g, b, a); }
 
+
 	/**
 	 * Save the buffer to file if recording and clear buffer
 	 *
@@ -267,16 +268,27 @@ public class MyRenderer {
 		}
 	}
 
+
 	/**
 	 * Shapes rendered will be saved to file
 	 *
 	 * Delete if outside SgAnimator
 	 */
 	public void startRecording() {
+		startRecording(0);
+	}
+
+	/**
+	 * Shapes rendered will be saved to file
+	 *
+	 * Delete if outside SgAnimator
+	 */
+	public void startRecording(int startFrame) {
 		recording = true;
 		buffer = myParent.createGraphics(myParent.width, myParent.height);
 		buffer.beginDraw();
-		frameNumber = 0;
+		buffer.background(backgroundColor.r*255f, backgroundColor.g*255f, backgroundColor.b*255f, backgroundColor.a*255f);
+		frameNumber = startFrame;
 	}
 
 	/**

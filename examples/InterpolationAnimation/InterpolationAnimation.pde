@@ -15,7 +15,7 @@ void setup() {
   noStroke();
   
   fn = Animation.getInterpolation(interpolationNumber);
-  interpolationName = Animation.interpolationNames[interpolationNumber];
+  interpolationName = Animation.interpolationNamesSimp[interpolationNumber];
 }
 
 
@@ -35,8 +35,8 @@ void draw() {
 
 
 void mouseClicked() {
-  interpolationNumber = (interpolationNumber+1) % Animation.interpolationNames.length;
+  interpolationNumber = (interpolationNumber+1) % Animation.interpolationNamesSimp.length;
   fn = Animation.getInterpolation(interpolationNumber);
-  interpolationName = Animation.interpolationNames[interpolationNumber];
+  interpolationName = Animation.interpolationNamesSimp[interpolationNumber];
   inVal = 0f;
 }

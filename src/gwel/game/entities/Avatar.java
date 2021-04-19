@@ -13,13 +13,14 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+ * Last modification : 16/03/2021
+ */
 public class Avatar {
     public ComplexShape shape;
     private final Vector2 position = new Vector2();
     private final Affine2 transform = new Affine2();
     public PostureCollection postures;
-    //private HashMap<String, Animation[][]> animations;  // Should have better perfs than animationCollection
-    //private String[] postureNames;
     private ComplexShape[] partsList;
     public ArrayList<Shape> physicsShapes;
     private float timeFactor = 1f;
@@ -28,6 +29,7 @@ public class Avatar {
     private boolean flipY = false;
     private float scaleX = 1;
     private float scaleY = 1;
+    private float angle = 0;
 
 
     public Avatar() {
@@ -37,6 +39,12 @@ public class Avatar {
 
     public void setPosition(float x, float y) { position.set(x, y); }
 
+    public Vector2 getPosition() { return position.cpy(); }
+
+
+    public void setAngle(float a) { angle = a; }
+
+    public float getAngle() { return angle; }
 
     /**
      * Scale geometry and animation data
@@ -54,9 +62,17 @@ public class Avatar {
      * @param sy
      */
     public void scale(float sx, float sy) {
+        scaleX *= sx;
+        scaleY *= sy;
+    }
+
+    public void setScale(float sx, float sy) {
         scaleX = sx;
         scaleY = sy;
     }
+
+    //public float getScaleX() { return scaleX; }
+    //public float getScaleY() { return scaleY; }
 
     public void setFlipX(boolean flip) { flipX = flip; }
     public void setFlipY(boolean flip) { flipY = flip; }
@@ -77,6 +93,25 @@ public class Avatar {
 
 
     public void timeScale(float s) { timeFactor = s; }
+
+
+    /**
+     * Check if a world point is inside the avatar's shape
+     * A first draw call must have been made to initialise the transform matrix
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean contains(float x, float y) {
+        Vector2 point = new Vector2(x, y);
+        transform.inv().applyTo(point);
+        for (Shape shape : physicsShapes) {
+            if (shape.contains(point.x, point.y))
+                return true;
+        }
+        return false;
+    }
 
 
     public void setShape(ComplexShape root) {
@@ -117,8 +152,8 @@ public class Avatar {
     }
 
     // Should be used by animation editor only (slow)
-    public void setPosture(HashMap<String, Animation[]> fullAnimation) {
-        setPosture(fullAnimation, 0.2f);
+    public void setPosture(HashMap<String, Animation[]> posture) {
+        setPosture(posture, 0.2f);
     }
 
 
@@ -135,7 +170,11 @@ public class Avatar {
     public void loadPosture(Posture posture) {
         for (int i = 0; i < partsList.length; i++) {
             Animation[] animList = posture.groups[i];
-            if (animList != null) partsList[i].setAnimationList(animList);
+            if (animList != null) {
+                partsList[i].setAnimationList(animList);
+            } else {
+                partsList[i].clearAnimationList();
+            }
         }
     }
 
@@ -146,7 +185,7 @@ public class Avatar {
     }
 
 
-    public void updateAnimation(float dtime) { shape.update(timeFactor * dtime); }
+    public void update(float dtime) { shape.update(timeFactor * dtime); }
 
     public void resetAnimation() {
         shape.reset();
@@ -161,9 +200,10 @@ public class Avatar {
     public void draw(MyRenderer renderer) {
         transform.setToTranslation(position.x, position.y);
         transform.scale(flipX ? -scaleX : scaleX, flipY ? -scaleY : scaleY);
+        if (angle != 0)
+            transform.rotateRad(angle);
         renderer.pushMatrix(transform);
         shape.draw(renderer);
-        //renderer.popMatrix();
         renderer.popMatrix();
     }
 
@@ -173,6 +213,16 @@ public class Avatar {
      */
     public void drawSelectedOnly(MyRenderer renderer) {
         shape.drawSelectedOnly(renderer);
+    }
+
+
+    public Avatar copy() {
+        Avatar newAvatar = new Avatar();
+        newAvatar.shape = shape.copy();
+        for (Shape shape : physicsShapes)
+            newAvatar.physicsShapes.add(shape.copy());
+        newAvatar.scale(scaleX, scaleY);
+        return newAvatar;
     }
 
 
@@ -202,9 +252,9 @@ public class Avatar {
 
         if (loadAnim && fromJson.has("animation")) {
             JsonValue jsonAnimation = fromJson.get("animation");
-            PostureCollection animationCollection = PostureCollection.fromJson(jsonAnimation, avatar.getPartsName());
-            avatar.postures = animationCollection;
-            if (animationCollection.size() > 0) {
+            PostureCollection postureCollection = PostureCollection.fromJson(jsonAnimation, avatar.getPartsName());
+            avatar.postures = postureCollection;
+            if (postureCollection.size() > 0) {
                 avatar.loadPosture(0);
             }
         }

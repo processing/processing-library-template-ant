@@ -487,13 +487,7 @@ public class ComplexShape implements Shape {
                     if (type.equals("polygon")) {
                         DrawablePolygon p = new DrawablePolygon();
                         p.setVertices(shape.get("vertices").asFloatArray());
-
-                        int[] triangles = shape.get("triangles").asIntArray();
-                        short[] trianglesShort = new short[triangles.length];
-                        for (int j=0; j<triangles.length; j++)
-                            trianglesShort[j] = (short) triangles[j];
-                        p.setIndices(trianglesShort);
-
+                        p.setIndices(shape.get("triangles").asShortArray());
                         float[] c = shape.get("color").asFloatArray();
                         p.setColor(c[0], c[1], c[2], c[3]);
 
