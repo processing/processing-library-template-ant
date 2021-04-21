@@ -25,6 +25,7 @@ public class MyRenderer {
 	private PGraphics buffer;
 	private Color color;
 	public final ArrayDeque<Affine2> matrixStack;
+	public final ArrayDeque<float[]> colorStack;
 	private Affine2 transform;
 	public final static String VERSION = "##library.prettyVersion##";
 	private ComplexShape selected;
@@ -41,17 +42,25 @@ public class MyRenderer {
 		transform = new Affine2();
 		matrixStack = new ArrayDeque<>();
 		matrixStack.push(new Affine2());
+		colorStack = new ArrayDeque<>();
+		colorStack.push(new float[] {0f, 0f, 0f, 1f});
 
 		System.out.println("Game renderer initiated...");
 	}
 
 
 	public void setColor(float r, float g, float b, float a) {
-		this.color.set(r, g, b, a);
+		color.set(r, g, b, a);
+		float[] colorMod = colorStack.getFirst();
+		color.r += colorMod[0];
+		color.g += colorMod[1];
+		color.b += colorMod[2];
+		color.a *= colorMod[3];
+		color.clamp();
 	}
 
 	public void setColor(Color color) {
-		this.color.set(color);
+		setColor(color.r, color.g, color.b, color.a);
 	}
 
 
@@ -83,6 +92,19 @@ public class MyRenderer {
 	public void popMatrix() {
 		transform = matrixStack.pop();
 	}
+
+
+	public void pushColorMod(float[] colorMod) {
+		float[] color = new float[4];
+		System.arraycopy(colorStack.getFirst(), 0, color, 0, 4);
+		color[0] += colorMod[0];
+		color[1] += colorMod[1];
+		color[2] += colorMod[2];
+		color[3] *= colorMod[3];
+		colorStack.push(color);
+	}
+
+	public void popColorMod() { colorStack.pop(); }
 
 
 	public Affine2 getTransform() {

@@ -1,6 +1,8 @@
 package gwel.game.anim;
 
 import com.badlogic.gdx.utils.JsonValue;
+import processing.core.PApplet;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

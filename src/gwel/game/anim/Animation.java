@@ -1,6 +1,7 @@
 package gwel.game.anim;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -17,9 +18,13 @@ public class Animation {
     public static final int AXE_SX = 3;
     public static final int AXE_SY = 4;
     public static final int AXE_Z = 5;
-    //public static final int AXE_ALPHA = 6;
+    public static final int AXE_ALPHA = 6;
+    public static final int AXE_RGB = 7;
+    public static final int AXE_R = 8;
+    public static final int AXE_G = 9;
+    public static final int AXE_B = 10;
     // Must be the same order as the enums
-    public static final String[] axeNames = {"x", "y", "rotation", "scale x", "scale y", "zoom"};
+    public static final String[] axeNames = {"x", "y", "rotation", "scale x", "scale y", "zoom", "alpha", "rgb", "r", "g", "b"};
     public static final Class[] timeFunctions = {
             TFConstant.class,
             TFEaseFromTo.class,
@@ -65,6 +70,7 @@ public class Animation {
     private int axe;
     private float value;
     private Affine2 transform;
+    private float[] colorMod;
     private float amp = 1.0f;
     private boolean inv = false;
     private float mult = 1.0f;
@@ -75,6 +81,7 @@ public class Animation {
         this.axe = AXE_X;
         value = 0.0f;
         transform = new Affine2();
+        colorMod = new float[] {0f, 0f, 0f, 1f};
     }
 
     public Animation(TimeFunction fn, int axe) {
@@ -123,7 +130,7 @@ public class Animation {
         this.axe = axe;
         if (axe == AXE_ROT) {
             amp = 360;
-        } else if (axe == AXE_SX || axe == AXE_SY || axe == AXE_Z) {
+        } else if (axe == AXE_SX || axe == AXE_SY || axe == AXE_Z || axe >= AXE_ALPHA) {
             amp = 1;
         }
         mult = amp * (inv ? -1 : 1);
@@ -188,19 +195,28 @@ public class Animation {
     }
 
 
+    public float[] getColorMod() { return colorMod; }
+
+
     public void reset() {
         fn.reset();
         transform.idt();
     }
 
 
-    public Affine2 update(float dtime) {
+    public void update(float dtime) {
         fn.update(dtime);
         value = mult * fn.getValue();
-        transform.setToTranslation(getTranslation());
-        transform.scale(getScale());
-        transform.rotate(getRotation());
-        return transform;
+        if (axe < AXE_ALPHA) {
+            transform.setToTranslation(getTranslation());
+            transform.scale(getScale());
+            transform.rotate(getRotation());
+        } else {
+            colorMod[0] = axe == AXE_R || axe == AXE_RGB ? value : 0f;
+            colorMod[1] = axe == AXE_G || axe == AXE_RGB ? value : 0f;
+            colorMod[2] = axe == AXE_B || axe == AXE_RGB ? value : 0f;
+            colorMod[3] = axe == AXE_ALPHA ? value : 1f;
+        }
     }
 
     public boolean isStopped() { return fn.state == TimeFunction.STOPPED; }

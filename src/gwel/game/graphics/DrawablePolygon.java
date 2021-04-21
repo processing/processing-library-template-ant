@@ -10,12 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 public class DrawablePolygon implements Shape {
     protected float[] vertices;
     protected short[] indices;
-    protected final Color colorOrig, colorMod;
+    protected final Color color;
 
 
     public DrawablePolygon() {
-        colorOrig = new Color(1, 1, 1, 1);
-        colorMod = new Color(1, 1, 1, 1);
+        color = new Color(1, 1, 1, 1);
         vertices = new float[0];
         indices = new short[0];
     }
@@ -61,21 +60,14 @@ public class DrawablePolygon implements Shape {
         setColor expects values in the range [0, 1]
      */
     public void setColor(float r, float g, float b, float a) {
-        colorOrig.set(r, g, b, a);
-        colorMod.set(r, g, b, a);
+        color.set(r, g, b, a);
     }
 
     public void setColor(Color c) {
-        colorOrig.set(c);
-        colorMod.set(c);
+        color.set(c);
     }
 
-    public Color getColor() { return colorOrig; }
-
-    public void setColorMod(float rm, float gm, float bm, float am) {
-        colorMod.set(colorOrig);
-        colorMod.mul(rm, gm, bm, am);
-    }
+    public Color getColor() { return color.cpy(); }
 
 
     @Override
@@ -111,13 +103,13 @@ public class DrawablePolygon implements Shape {
 
     public DrawablePolygon copy() {
         DrawablePolygon polygon = new DrawablePolygon(vertices.clone(), indices.clone());
-        polygon.setColor(colorOrig.cpy());
+        polygon.setColor(color);
         return polygon;
     }
 
 
     public void draw(MyRenderer renderer) {
-        renderer.setColor(colorMod);
+        renderer.setColor(color);
         renderer.triangles(vertices, indices);
     }
 

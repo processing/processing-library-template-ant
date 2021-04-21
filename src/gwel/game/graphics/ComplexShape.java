@@ -1,11 +1,13 @@
 package gwel.game.graphics;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import gwel.game.anim.Animation;
 import gwel.game.utils.DummyPShape;
+import processing.core.PApplet;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PVector;
@@ -28,7 +30,7 @@ public class ComplexShape implements Shape {
     private boolean transitioning = false;
     private float transitionDuration;
     private float transitionTime;
-
+    private float[] tint, colorMod;
 
     public ComplexShape() {
         children = new ArrayList<>();
@@ -38,6 +40,8 @@ public class ComplexShape implements Shape {
         transform = new Affine2();
         oldTransform = new Affine2();
         nextTransform = new Affine2();
+        tint = new float[] {0f, 0f, 0f, 1f};
+        colorMod = new float[] {0f, 0f, 0f, 1f};
     }
 
     public void addShape(Shape shape) {
@@ -50,11 +54,13 @@ public class ComplexShape implements Shape {
 
     // Return all chilren (Drawables and ComplexShapes)
     public ArrayList<Shape> getShapes() {
-      return shapes;
+        return shapes;
     }
 
     // Return only complexShape children
-    public ArrayList<ComplexShape> getChildren() { return children; }
+    public ArrayList<ComplexShape> getChildren() {
+        return children;
+    }
 
     // Remove all children
     public void clear() {
@@ -64,7 +70,7 @@ public class ComplexShape implements Shape {
 
 
     public Vector2 getLocalOrigin() {
-      return localOrigin.cpy();
+        return localOrigin.cpy();
     }
 
     public void setLocalOrigin(float x, float y) {
@@ -81,16 +87,16 @@ public class ComplexShape implements Shape {
 
 
     public Affine2 getTransform() {
-      return new Affine2(transform);
+        return new Affine2(transform);
     }
 
     public Affine2 getAbsoluteTransform() {
-      Affine2 mat = new Affine2(transform);
-      if (parent == null) {
-          return mat;
-      } else {
-          return mat.preMul(parent.getAbsoluteTransform());
-      }
+        Affine2 mat = new Affine2(transform);
+        if (parent == null) {
+            return mat;
+        } else {
+            return mat.preMul(parent.getAbsoluteTransform());
+        }
     }
 
 
@@ -162,7 +168,9 @@ public class ComplexShape implements Shape {
     }
 
 
-    public Animation[] getAnimationList() { return animations; }
+    public Animation[] getAnimationList() {
+        return animations;
+    }
 
     public void setAnimationList(Animation[] animList) {
         animations = animList;
@@ -174,19 +182,23 @@ public class ComplexShape implements Shape {
     }
 
 
-    public Animation getAnimation(int n) { return animations[n]; }
+    public Animation getAnimation(int n) {
+        return animations[n];
+    }
 
-    public void setAnimation(int i, Animation anim) { animations[i] = anim; }
+    public void setAnimation(int i, Animation anim) {
+        animations[i] = anim;
+    }
 
     public void addAnimation(Animation anim) {
-        Animation[] newAnimations = new Animation[animations.length+1];
+        Animation[] newAnimations = new Animation[animations.length + 1];
         System.arraycopy(animations, 0, newAnimations, 0, animations.length);
         newAnimations[animations.length] = anim;
         animations = newAnimations;
     }
 
     public void removeAnimation(int idx) {
-        Animation[] newAnimations = new Animation[animations.length-1];
+        Animation[] newAnimations = new Animation[animations.length - 1];
         int i = 0;
         for (int n = 0; n < newAnimations.length; n++) {
             if (i == idx)
@@ -202,7 +214,7 @@ public class ComplexShape implements Shape {
 
         if (transitioning) {
             transitionTime += dtime;
-            float t = transitionTime/transitionDuration;
+            float t = transitionTime / transitionDuration;
             if (transitionTime >= transitionDuration) {
                 transitioning = false;
                 t = 1.0f;
@@ -212,8 +224,18 @@ public class ComplexShape implements Shape {
             transform.translate(-localOrigin.x, -localOrigin.y);
         } else if (animations.length > 0) {
             transform.setToTranslation(localOrigin);
-            for (int i = animations.length-1; i >= 0; i--) {
-                transform.mul(animations[i].update(dtime));
+            System.arraycopy(tint, 0, colorMod, 0, tint.length);
+            for (int i = animations.length - 1; i >= 0; i--) {
+                animations[i].update(dtime);
+                if (animations[i].getAxe() < 6) {
+                    transform.mul(animations[i].getTransform());
+                } else {
+                    float[] animColorMod = animations[i].getColorMod();
+                    colorMod[0] += animColorMod[0];
+                    colorMod[1] += animColorMod[1];
+                    colorMod[2] += animColorMod[2];
+                    colorMod[3] *= animColorMod[3];
+                }
             }
             transform.translate(-localOrigin.x, -localOrigin.y);
         }
@@ -255,7 +277,7 @@ public class ComplexShape implements Shape {
 
     // Maybe could put a "fixtransform" parameter here
     public void transitionAnimation(Animation[] nextAnims, float duration) {
-      // duration is in seconds
+        // duration is in seconds
         if (animations.length > 0) {
             transitioning = true;
             transitionDuration = duration;
@@ -273,18 +295,28 @@ public class ComplexShape implements Shape {
     }
 
 
-    @Override
     public void setColorMod(float mr, float mg, float mb, float ma) {
-        for (Drawable shape : shapes)
-            shape.setColorMod(mr, mg, mb, ma);
+        tint[0] = mr;
+        tint[1] = mg;
+        tint[2] = mb;
+        tint[3] = ma;
+    }
+
+    public void setColorMod(Color colorMod) {
+        tint[0] = colorMod.r;
+        tint[1] = colorMod.g;
+        tint[2] = colorMod.b;
+        tint[3] = colorMod.a;
     }
 
 
     public void draw(MyRenderer renderer) {
         renderer.pushMatrix(transform);
+        renderer.pushColorMod(colorMod);
         for (Drawable shape : shapes)
             shape.draw(renderer);
         renderer.popMatrix();
+        renderer.popColorMod();
     }
 
 

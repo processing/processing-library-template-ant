@@ -8,6 +8,7 @@ import gwel.game.anim.Animation;
 import gwel.game.anim.PostureCollection;
 import gwel.game.anim.Posture;
 import gwel.game.graphics.*;
+import processing.core.PApplet;
 
 import java.io.*;
 import java.util.*;
@@ -279,10 +280,9 @@ public class Avatar {
 
     public void saveFile(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
-
         json.addChild("animation", postures.toJson(getPartsName()));
-
         JsonValue jsonPhysicsShapes = new JsonValue(JsonValue.ValueType.array);
+
         for (Shape shape : physicsShapes) {
             JsonValue jsonShape = new JsonValue(JsonValue.ValueType.object);
             if (shape.getClass() == DrawablePolygon.class) {
