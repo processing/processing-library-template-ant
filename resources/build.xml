@@ -132,7 +132,9 @@ ${line}
 		<delete dir="${sketchbook.location}/${folder}/${project.name}" />
   	  	<mkdir dir="${sketchbook.location}/${folder}/${project.name}" />
   		<copy todir="${sketchbook.location}/${folder}/${project.name}">
-  			<fileset dir="${project.tmp}/${project.name}"/>
+  			<fileset dir="${project.tmp}/${project.name}">
+				<exclude name="**/core.jar"/>
+			</fileset>
   		</copy> 
 	</target>
 	
