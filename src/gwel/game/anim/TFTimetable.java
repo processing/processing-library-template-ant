@@ -2,29 +2,29 @@ package gwel.game.anim;
 
 import com.badlogic.gdx.math.Interpolation;
 
+
 public class TFTimetable extends TimeFunction {
     private  int[] easingTable;
     private float[] valueTable;
-    private Interpolation interp = Animation.getInterpolation(0);
+    private Interpolation interpolation;
     private float timePerStep;
     private int prevStep, nextStep;
     private boolean loop;
-    private float value;
 
 
     public TFTimetable() {
-        this(2f, true, true);
+        this(2f, true, true, "linear");
     }
 
-    public TFTimetable(float duration, boolean loop, boolean smoothend) {
+    public TFTimetable(float duration, boolean loop, boolean smoothend, String easing) {
         params = new TFParam[]{
                 new TFParam<>("duration", TFParam.SLIDER, "s", 0.f, 10.f, duration),
                 new TFParam<>("loop", TFParam.CHECKBOX, "", 0f, 1f, loop),
-                new TFParam<>("smoothend", TFParam.CHECKBOX, "", 0, 1, smoothend)
-                //new TFParam<FloatArray>("table", TFParam.TABLE, "", 0f, 0f, null)
+                new TFParam<>("smoothend", TFParam.CHECKBOX, "", 0, 1, smoothend),
+                new TFParam<>("easing", TFParam.EASING, "", 0, 0, easing),
         };
-        //params[3].setPayload(valueTable);
         valueTable = new float[] {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+        interpolation = Animation.getInterpolation(easing);
         reset();
     }
 
@@ -41,9 +41,9 @@ public class TFTimetable extends TimeFunction {
     }
 
 
-    public void setEasing(String easingName) {
+    /*public void setEasing(String easingName) {
         interp = Animation.getInterpolation(easingName);
-    }
+    }*/
 
     public void setEasingTable(int [] table) { easingTable = table; }
 
@@ -83,7 +83,7 @@ public class TFTimetable extends TimeFunction {
                     }
                 }
             }
-            value = interp.apply(valueTable[prevStep], valueTable[nextStep], time/timePerStep);
+            value = interpolation.apply(valueTable[prevStep], valueTable[nextStep], time/timePerStep);
         }
     }
 
@@ -97,9 +97,6 @@ public class TFTimetable extends TimeFunction {
         // Add an extra step if smoothend parameter is enabled
         int totalSteps = valueTable.length-1 + ((boolean) params[2].getValue() ? 1 : 0);
         timePerStep = (float) params[0].getValue() / totalSteps;
+        interpolation = Animation.getInterpolation((String) params[3].getValue());
     }
-
-
-    @Override
-    public float getValue() { return value; }
 }

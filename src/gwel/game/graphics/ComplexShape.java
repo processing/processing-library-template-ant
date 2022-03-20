@@ -179,6 +179,7 @@ public class ComplexShape implements Shape {
     public void clearAnimationList() {
         transform.idt();
         animations = new Animation[0];
+        resetColorMod();
     }
 
 
@@ -253,6 +254,14 @@ public class ComplexShape implements Shape {
         }
         for (ComplexShape child : children)
             child.reset();
+        resetColorMod();
+    }
+
+    private void resetColorMod() {
+        colorMod[0] = 0f;
+        colorMod[1] = 0f;
+        colorMod[2] = 0f;
+        colorMod[3] = 1f;
     }
 
 
@@ -295,6 +304,8 @@ public class ComplexShape implements Shape {
     }
 
 
+    /* Apply a constant tint to the shape
+     */
     public void setColorMod(float mr, float mg, float mb, float ma) {
         tint[0] = mr;
         tint[1] = mg;
@@ -302,6 +313,8 @@ public class ComplexShape implements Shape {
         tint[3] = ma;
     }
 
+    /* Apply a constant tint to the shape
+     */
     public void setColorMod(Color colorMod) {
         tint[0] = colorMod.r;
         tint[1] = colorMod.g;
@@ -356,7 +369,7 @@ public class ComplexShape implements Shape {
     }
 
 
-    // Used for processing animation editor
+    // Used by processing animation editor
     public static ComplexShape fromPShape(PShape svgShape) {
         Shape shape = fromPShape(svgShape, new PMatrix3D(), 0);
         if (!(shape instanceof ComplexShape)) {
@@ -364,10 +377,11 @@ public class ComplexShape implements Shape {
             cs.addShape(shape);
             return cs;
         }
+        ((ComplexShape) shape).hardScale(0.1f, 0.1f);
         return (ComplexShape) shape;
     }
 
-    // Used for processing animation editor
+    // Used by processing animation editor
     public static Shape fromPShape(PShape svgShape, PMatrix3D matrix, int depth) {
         StringBuilder prefix = new StringBuilder();
 
@@ -505,6 +519,7 @@ public class ComplexShape implements Shape {
                 shape = poly;
             }
         }
+
         return shape;
     }
 

@@ -9,6 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="gdx" level="project" />
-    <orderEntry type="library" name="core" level="application" />
+    <orderEntry type="library" name="core" level="project" />
   </component>
 </module>

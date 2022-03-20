@@ -76,11 +76,9 @@ public abstract class TimeFunction {
         time += dtime;
     }
 
-
     public void reset() {
         time = 0;
     }
-
 
     public float getValue() { return value; };
 }

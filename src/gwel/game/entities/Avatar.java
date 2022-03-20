@@ -280,9 +280,15 @@ public class Avatar {
 
     public void saveFile(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
-        json.addChild("animation", postures.toJson(getPartsName()));
-        JsonValue jsonPhysicsShapes = new JsonValue(JsonValue.ValueType.array);
 
+        json.addChild("library version", new JsonValue(MyRenderer.version()));
+        json.addChild("format version", new JsonValue("1.0"));
+
+        if (postures != null)
+            json.addChild("animation", postures.toJson(getPartsName()));
+
+        // Box2D shapes
+        JsonValue jsonPhysicsShapes = new JsonValue(JsonValue.ValueType.array);
         for (Shape shape : physicsShapes) {
             JsonValue jsonShape = new JsonValue(JsonValue.ValueType.object);
             if (shape.getClass() == DrawablePolygon.class) {
