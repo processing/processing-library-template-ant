@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
+import gwel.game.utils.BoundingBox;
 
 
 public class DrawablePolygon implements Shape {
     protected float[] vertices;
     protected short[] indices;
     protected final Color color;
-
 
     public DrawablePolygon() {
         color = new Color(1, 1, 1, 1);
@@ -32,10 +32,33 @@ public class DrawablePolygon implements Shape {
         indices = triangulator.computeTriangles(vertices).toArray();
     }
 
+    public BoundingBox getBoundingBox() {
+        BoundingBox bb = new BoundingBox();
+        for (int i = 0; i < vertices.length; i += 2) {
+            float x = vertices[i];
+            float y = vertices[i + 1];
+            bb.include(new Vector2(x, y));
+        }
+        return bb;
+    }
+
+    public BoundingBox getBoundingBox(Affine2 transform) {
+        BoundingBox bb = new BoundingBox();
+        for (int i = 0; i < vertices.length; i += 2) {
+            Vector2 p = new Vector2(vertices[i], vertices[i+1]);
+            transform.applyTo(p);
+            bb.include(p);
+        }
+        return bb;
+    }
+
+    @Override
+    public boolean contains(Vector2 point) {
+        return contains(point.x, point.y);
+    }
 
     /**
      * From package com.badlogic.gdx.math.Polygon;
-     *
      */
     @Override
     public boolean contains(float x, float y) {

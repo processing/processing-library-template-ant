@@ -1,0 +1,11 @@
+1.3
+  * Prints library version when instantiating MyRenderer
+  * Keeps retro compatibility with unversioned json files
+  * Returns null when trying to read corrupted json files
+  * BoundingBox class and getBoundingBox functions for Shape objects
+  * Implemented contains method of class ComplexShape
+  * Pivot/origin is automatically set to center of bounding box of ComplexShapes
+  * paused property to Avatar class (suspend animation updating)
+  * preTransform affine matrix for complexShape objects (gives ability keep modifications separated from original geometry)
+  * Function resetTransform of ComplexShape class
+  * Function getRootShape of ComplexShape class

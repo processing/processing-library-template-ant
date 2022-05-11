@@ -8,17 +8,15 @@ import gwel.game.anim.Animation;
 import gwel.game.anim.PostureCollection;
 import gwel.game.anim.Posture;
 import gwel.game.graphics.*;
-import processing.core.PApplet;
 
 import java.io.*;
 import java.util.*;
 
 
-/**
- * Last modification : 16/03/2021
- */
+
 public class Avatar {
     public ComplexShape shape;
+    public boolean paused = false;
     private final Vector2 position = new Vector2();
     private final Affine2 transform = new Affine2();
     public PostureCollection postures;
@@ -186,7 +184,10 @@ public class Avatar {
     }
 
 
-    public void update(float dtime) { shape.update(timeFactor * dtime); }
+    public void update(float dtime) {
+        if (!paused)
+            shape.update(timeFactor * dtime);
+    }
 
     public void resetAnimation() {
         shape.reset();
@@ -232,27 +233,46 @@ public class Avatar {
     }
 
     public static Avatar fromFile(File file, boolean loadAnim) {
-        JsonValue fromJson;
+        JsonValue json;
         try {
             InputStream in = new FileInputStream(file);
-            fromJson = new JsonReader().parse(in);
+            json = new JsonReader().parse(in);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (com.badlogic.gdx.utils.SerializationException e) {
+            System.out.println("Corrupted file");
+            //e.printStackTrace();
+            return null;
         }
 
+        if (json.has("fmt_ver")) {
+            String versionString = json.getString("fmt_ver");
+            if (versionString == "1.0")
+                return load_v1(json, loadAnim);
+            else if (versionString == "2.0")
+                return load_v2(json, loadAnim);
+            else
+                return load_v1(json, loadAnim);
+        } else {
+            return load_v1(json, loadAnim);
+        }
+    }
+
+    private static Avatar load_v1(JsonValue json, boolean loadAnim) {
         Avatar avatar = new Avatar();
 
         // Load shape first
-        if (fromJson.has("geometry")) {
-            JsonValue jsonGeometry = fromJson.get("geometry");
+        if (json.has("geometry")) {
+            JsonValue jsonGeometry = json.get("geometry");
             avatar.setShape(ComplexShape.fromJson(jsonGeometry));
         } else {
             System.out.println("No geometry data found !");
+            return null;
         }
 
-        if (loadAnim && fromJson.has("animation")) {
-            JsonValue jsonAnimation = fromJson.get("animation");
+        if (loadAnim && json.has("animation")) {
+            JsonValue jsonAnimation = json.get("animation");
             PostureCollection postureCollection = PostureCollection.fromJson(jsonAnimation, avatar.getPartsName());
             avatar.postures = postureCollection;
             if (postureCollection.size() > 0) {
@@ -260,8 +280,8 @@ public class Avatar {
             }
         }
 
-        if (fromJson.has("box2d")) {
-            for (JsonValue jsonShape : fromJson.get("box2d")) {
+        if (json.has("box2d")) {
+            for (JsonValue jsonShape : json.get("box2d")) {
                 if (jsonShape.getString("type").equals("circle")) {
                     DrawableCircle circle = new DrawableCircle(0, 0, 0);
                     circle.setCenter(jsonShape.getFloat("x"), jsonShape.getFloat("y"));
@@ -277,6 +297,57 @@ public class Avatar {
         return avatar;
     }
 
+    private static Avatar load_v2(JsonValue json, boolean loadAnim) {
+        List<Avatar> avatars = new ArrayList<>();
+
+        if (json.has("avatars")) {
+            JsonValue jsonAvatars = json.get("avatars");
+            for (JsonValue jsonAvatar : jsonAvatars.iterator()) {
+                Avatar avatar = new Avatar();
+
+                // Load shape first
+                if (jsonAvatar.has("geometry")) {
+                    JsonValue jsonGeometry = jsonAvatar.get("geometry");
+                    avatar.setShape(ComplexShape.fromJson(jsonGeometry));
+                } else {
+                    System.out.println("No geometry data found !");
+                }
+
+                if (json.has("box2d")) {
+                    for (JsonValue jsonShape : json.get("box2d")) {
+                        if (jsonShape.getString("type").equals("circle")) {
+                            DrawableCircle circle = new DrawableCircle(0, 0, 0);
+                            circle.setCenter(jsonShape.getFloat("x"), jsonShape.getFloat("y"));
+                            circle.setRadius(jsonShape.getFloat("radius"));
+                            avatar.physicsShapes.add(circle);
+                        } else if (jsonShape.getString("type").equals("polygon")) {
+                            DrawablePolygon polygon = new DrawablePolygon();
+                            polygon.setVertices(jsonShape.get("vertices").asFloatArray());
+                            avatar.physicsShapes.add(polygon);
+                        }
+                    }
+                }
+
+                avatars.add(avatar);
+            }
+        }
+
+        Avatar avatar;
+        if (avatars.size() > 0)
+            avatar = avatars.get(0);
+        else
+            return null;
+
+        if (loadAnim && json.has("animation")) {
+            JsonValue jsonAnimation = json.get("animation");
+            PostureCollection postureCollection = PostureCollection.fromJson(jsonAnimation, avatar.getPartsName());
+            avatar.postures = postureCollection;
+            if (postureCollection.size() > 0) {
+                avatar.loadPosture(0);
+            }
+        }
+        return avatar;
+    }
 
     public void saveFile(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
@@ -308,8 +379,57 @@ public class Avatar {
             jsonPhysicsShapes.addChild(jsonShape);
         }
         json.addChild("box2d", jsonPhysicsShapes);
-
         json.addChild("geometry", shape.toJson(false));
+
+        try {
+            FileWriter writer = new FileWriter(filename);
+            writer.write(json.prettyPrint(JsonWriter.OutputType.json, 80));
+            writer.close();
+            System.out.println("Avatar data saved to " + filename);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to " + filename);
+            e.printStackTrace();
+        }
+    }
+
+    public void saveFile_v2(String filename) {
+        JsonValue json = new JsonValue(JsonValue.ValueType.object);
+        json.addChild("lib_ver", new JsonValue(MyRenderer.version()));
+        json.addChild("fmt_ver", new JsonValue("2.0"));
+
+        if (postures != null) {
+            json.addChild("animation", postures.toJson(getPartsName()));
+        }
+
+        // Box2D shapes
+        JsonValue jsonPhysicsShapes = new JsonValue(JsonValue.ValueType.array);
+        for (Shape shape : physicsShapes) {
+            JsonValue jsonShape = new JsonValue(JsonValue.ValueType.object);
+            if (shape.getClass() == DrawablePolygon.class) {
+                jsonShape.addChild("type", new JsonValue("polygon"));
+                JsonValue jsonVertices = new JsonValue(JsonValue.ValueType.array);
+                float[] vertices = ((DrawablePolygon) shape).getVertices();
+                for (float vert : vertices)
+                    jsonVertices.addChild(new JsonValue(vert));
+                jsonShape.addChild("vertices", jsonVertices);
+            } else if (shape.getClass() == DrawableCircle.class) {
+                DrawableCircle circle = (DrawableCircle) shape;
+                jsonShape.addChild("type", new JsonValue("circle"));
+                jsonShape.addChild("x", new JsonValue(circle.getCenter().x));
+                jsonShape.addChild("y", new JsonValue(circle.getCenter().y));
+                jsonShape.addChild("radius", new JsonValue(circle.getRadius()));
+            }
+            jsonPhysicsShapes.addChild(jsonShape);
+        }
+
+        JsonValue jsonAvatar = new JsonValue(JsonValue.ValueType.object);
+        jsonAvatar.addChild("box2d", jsonPhysicsShapes);
+        jsonAvatar.addChild("geometry", shape.toJson(false));
+
+        JsonValue jsonAvatars = new JsonValue(JsonValue.ValueType.array);
+        jsonAvatars.addChild(jsonAvatar);
+
+        json.addChild("avatars", jsonAvatars);
 
         try {
             FileWriter writer = new FileWriter(filename);

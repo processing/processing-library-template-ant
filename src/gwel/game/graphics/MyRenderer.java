@@ -20,14 +20,15 @@ import java.util.ArrayDeque;
  */
 
 public class MyRenderer {
+	public final static String VERSION = "##library.prettyVersion##";
+
 	// myParent is a reference to the parent sketch
-	private PApplet myParent;
+	private final PApplet myParent;
 	private PGraphics buffer;
 	private Color color;
 	public final ArrayDeque<Affine2> matrixStack;
 	public final ArrayDeque<float[]> colorStack;
 	private Affine2 transform;
-	public final static String VERSION = "##library.prettyVersion##";
 	private ComplexShape selected;
 	static public final Color selectedColor = new Color(0.0f, 1.0f, 0.0f, 0.6f);
 	private boolean wireframe = false;
@@ -45,7 +46,7 @@ public class MyRenderer {
 		colorStack = new ArrayDeque<>();
 		colorStack.push(new float[] {0f, 0f, 0f, 1f});
 
-		System.out.println("Game renderer initiated...");
+		System.out.println("Game renderer initiated..." + " Version " + VERSION);
 	}
 
 

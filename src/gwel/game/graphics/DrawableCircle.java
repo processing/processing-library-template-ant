@@ -4,6 +4,7 @@ package gwel.game.graphics;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import gwel.game.utils.BoundingBox;
 
 
 public class DrawableCircle extends DrawablePolygon {
@@ -52,6 +53,15 @@ public class DrawableCircle extends DrawablePolygon {
         }
 
         dirty = false;
+    }
+
+    public BoundingBox getBoundingBox() {
+        BoundingBox bb = new BoundingBox();
+        bb.top = center.y - radius;
+        bb.bottom = center.y + radius;
+        bb.left = center.x - radius;
+        bb.right = center.x + radius;
+        return bb;
     }
 
     @Override
