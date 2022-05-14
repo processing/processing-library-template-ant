@@ -55,7 +55,7 @@ Avatar createMushroom(float x) {
     other.hardTranslate(tilt/20f, 0);
     float s = (pow(random(0.5, 0.7), j));
     other.hardScale(s, s);
-    other.setColorMod(random(0.7f, 1.1f)+j/10f, random(0.7f, 1.1f)+j/10f, random(0.7f, 1.1f)+j/10f, 1);
+    other.setColorMod(random(-0.3f, 0.1f)+j/10f, random(-0.3f, 0.1)+j/10f, random(-0.3f, 0.1)+j/10f, 1);
     mushroomShape.addShape(other);
   }
   Avatar mushroom;

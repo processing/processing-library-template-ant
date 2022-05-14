@@ -42,7 +42,7 @@ void makeMill() {
   mill = new ComplexShape();
   for (int i=0; i<numWings; i++) {
     ComplexShape newWing = wing.copy();
-    newWing.setColorMod(random(0.9, 1.1), random(0.9, 1.1), random(0.9, 1.1), 1f);
+    newWing.setColorMod(random(-0.1, 0.1), random(-0.1, 0.1), random(-0.1, 0.1), 1f);
     newWing.getAnimation(0).setParam("phase", r1*i*360/numWings);
     TimeFunction rotate = new TFConstant((float) i/numWings);
     // Functions value get automaticaly mapped to range [-180,180] when using rotation axe 
@@ -63,8 +63,6 @@ void mouseClicked() {
 
 void draw() {
   background(1);
-  //fill(1f, 0.01f);
-  //rect(0, 0, width, height);
   pushMatrix();
   translate(width/2, height/2);  
   mill.update(1f/frameRate);
