@@ -26,7 +26,7 @@ public class Animation {
     // Must be the same order as the enums
     public static final String[] axeNames = {"x", "y", "rotation", "scale x", "scale y", "zoom", "alpha", "rgb", "r", "g", "b"};
     public static final Class[] timeFunctions = {
-            TFConstant.class,
+            //TFConstant.class,
             TFEaseFromTo.class,
             TFTimetable.class,
             TFSin.class,

@@ -131,9 +131,10 @@ public class Avatar {
     /**
      * Delete if outside Processing editor
      */
+    /*
     public String[] getPartsNamePre() {
         return shape.getIdListPre("").toArray(new String[0]);
-    }
+    }*/
 
 
     // Should be used by animation editor only (slow)

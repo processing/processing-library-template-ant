@@ -8,4 +8,7 @@
   * paused property to Avatar class (suspend animation updating)
   * preTransform affine matrix for complexShape objects (gives ability keep modifications separated from original geometry)
   * Function resetTransform of ComplexShape class
-  * Function getRootShape of ComplexShape class
+  * Function invalidateBoundingBox of ComplexShape
+  * Function getRootShape of ComplexShape class (needed by function "invalidateBoundingBox")
+  * Getter and setter function for the pre-transform matrix of ComplexShape instances
+  * Removed time function "TFConstant" (redundant with manual softTransform)
