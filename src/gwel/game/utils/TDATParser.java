@@ -51,7 +51,7 @@ public class TDATParser {
                     }
                     break;
                 case 'p':  // Polygon
-                    int n = (int) nextByte();  // Number of vertices in polygon
+                    int n = nextByte();  // Number of vertices in polygon
                     red = nextByte() / 254.f;
                     green = nextByte() / 254.f;
                     blue = nextByte() / 254.f;
@@ -81,7 +81,7 @@ public class TDATParser {
                     break;
                 case 'i':  // ID label
                     String label = "";
-                    n = (int) nextByte();
+                    n = nextByte();
                     for (int i=0; i<n; i++)
                         label += nextChar();
                     currentShape.setId(label);

@@ -121,7 +121,7 @@ public class DrawableCircle extends DrawablePolygon {
     }
 
     @Override
-    public void draw(MyRenderer renderer) {
+    public void draw(Renderer renderer) {
         if (dirty)
             computeVertices();
         super.draw(renderer);

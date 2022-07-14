@@ -131,14 +131,14 @@ public class DrawablePolygon implements Shape {
     }
 
 
-    public void draw(MyRenderer renderer) {
+    public void draw(Renderer renderer) {
         renderer.setColor(color);
         renderer.triangles(vertices, indices);
     }
 
     // Delete if outside SgAnimator
-    public void drawSelected(MyRenderer renderer) {
-        renderer.setColor(MyRenderer.selectedColor);
+    public void drawSelected(PRenderer renderer) {
+        renderer.setColor(PRenderer.selectedColor);
         renderer.triangles(vertices);
     }
 }

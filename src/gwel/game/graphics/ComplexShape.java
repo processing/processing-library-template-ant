@@ -444,7 +444,7 @@ public class ComplexShape implements Shape {
     }
 
 
-    public void draw(MyRenderer renderer) {
+    public void draw(Renderer renderer) {
         // preTransform is applied BEFORE animTransform
         renderer.pushMatrix(animTransform);
         renderer.pushMatrix(preTransform);
@@ -457,8 +457,8 @@ public class ComplexShape implements Shape {
     }
 
 
-    // Used for processing animation editor
-    public void drawSelected(MyRenderer renderer) {
+    // Used by processing animation editor
+    public void drawSelected(PRenderer renderer) {
         renderer.pushMatrix(animTransform);
         renderer.pushMatrix(preTransform);
         for (Drawable shape : shapes)
@@ -468,7 +468,7 @@ public class ComplexShape implements Shape {
     }
 
     // Used for processing animation editor
-    public void drawSelectedOnly(MyRenderer renderer) {
+    public void drawSelectedOnly(PRenderer renderer) {
         if (renderer.getSelected() == this) {
             // Highlight this shape
             drawSelected(renderer);

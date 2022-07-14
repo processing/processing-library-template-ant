@@ -8,6 +8,8 @@ import gwel.game.anim.Animation;
 import gwel.game.anim.PostureCollection;
 import gwel.game.anim.Posture;
 import gwel.game.graphics.*;
+import gwel.game.utils.MatrixStack;
+import processing.core.PGraphics;
 
 import java.io.*;
 import java.util.*;
@@ -200,11 +202,10 @@ public class Avatar {
     }
 
 
-    public void draw(MyRenderer renderer) {
+    public void draw(Renderer renderer) {
         transform.setToTranslation(position.x, position.y);
         transform.scale(flipX ? -scaleX : scaleX, flipY ? -scaleY : scaleY);
-        if (angle != 0)
-            transform.rotateRad(angle);
+        transform.rotateRad(angle);
         renderer.pushMatrix(transform);
         shape.draw(renderer);
         renderer.popMatrix();
@@ -214,7 +215,7 @@ public class Avatar {
     /**
      * Delete if outside Processing editor
      */
-    public void drawSelectedOnly(MyRenderer renderer) {
+    public void drawSelectedOnly(PRenderer renderer) {
         shape.drawSelectedOnly(renderer);
     }
 
@@ -353,7 +354,7 @@ public class Avatar {
     public void saveFile(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
 
-        json.addChild("library version", new JsonValue(MyRenderer.version()));
+        json.addChild("library version", new JsonValue(PRenderer.version()));
         json.addChild("format version", new JsonValue("1.0"));
 
         if (postures != null)
@@ -395,7 +396,7 @@ public class Avatar {
 
     public void saveFile_v2(String filename) {
         JsonValue json = new JsonValue(JsonValue.ValueType.object);
-        json.addChild("lib_ver", new JsonValue(MyRenderer.version()));
+        json.addChild("lib_ver", new JsonValue(PRenderer.version()));
         json.addChild("fmt_ver", new JsonValue("2.0"));
 
         if (postures != null) {
