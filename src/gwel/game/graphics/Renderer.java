@@ -4,16 +4,22 @@ package gwel.game.graphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import gwel.game.utils.MatrixStack;
+import processing.core.PApplet;
+
 import java.util.ArrayDeque;
 
 
 public abstract class Renderer {
+    // parent is a reference to the parent sketch
+    protected final PApplet parent;
     private final MatrixStack matrixStack = new MatrixStack();
     public final Color color = new Color();
     public final ArrayDeque<float[]> colorStack = new ArrayDeque<>();
 
 
-    protected Renderer() {
+    protected Renderer(PApplet parent) {
+        this.parent = parent;
+        colorStack.push(new float[] {0f, 0f, 0f, 1f});
     }
 
 

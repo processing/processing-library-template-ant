@@ -19,16 +19,13 @@ import processing.core.PApplet;
 public class PRenderer extends Renderer {
 	public final static String VERSION = "##library.prettyVersion##";
 
-	// parent is a reference to the parent sketch
-	private final PApplet parent;
 	private ComplexShape selected;
 	static public final Color selectedColor = new Color(0.0f, 1.0f, 0.0f, 0.6f);
 	private boolean wireframe = false;
 
 
 	public PRenderer(PApplet parent) {
-		this.parent = parent;
-		colorStack.push(new float[] {0f, 0f, 0f, 1f});
+		super(parent);
 
 		System.out.println("Game renderer initiated..." + " Version " + VERSION);
 	}

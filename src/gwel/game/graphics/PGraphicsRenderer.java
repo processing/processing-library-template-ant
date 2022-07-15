@@ -4,19 +4,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PImage;
 
 public class PGraphicsRenderer extends Renderer {
 
-    private final PApplet parent;
+    //private final PApplet parent;
     private PGraphics buffer;
-    private Color backgroundColor = new Color(1f, 1f, 1f, 0f);
+    private final Color backgroundColor = new Color(1f, 1f, 1f, 0f);
 
     private boolean recording = false;
     private int frameNumber;
 
 
     public PGraphicsRenderer(PApplet parent) {
-        this.parent = parent;
+        super(parent);
     }
 
 
@@ -27,6 +28,16 @@ public class PGraphicsRenderer extends Renderer {
         buffer = parent.createGraphics(width, height);
         //buffer.noStroke();
     }
+
+    public void beginDraw() { buffer.beginDraw(); }
+
+    public void endDraw() { buffer.endDraw();}
+
+    public void clear() {
+        buffer.background(backgroundColor.r*255f, backgroundColor.g*255f, backgroundColor.b*255f, backgroundColor.a*255f);
+    }
+
+    public PImage getBuffer() { return buffer.get(); }
 
     public void triangles(float[] vertices) {
         Vector2 point = new Vector2();
