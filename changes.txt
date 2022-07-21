@@ -2,6 +2,7 @@
   * Renamed MyRenderer to PRenderer
   * New abstract class : Renderer
   * New Renderer class for buffered rendering : PGraphicsRenderer
+  * Drawing to file functions removed from library
   * New class : MatrixStack
 
 1.3

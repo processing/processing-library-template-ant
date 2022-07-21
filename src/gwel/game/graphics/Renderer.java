@@ -64,15 +64,11 @@ public abstract class Renderer {
     public void scale(float sx, float sy) { matrixStack.transform.scale(sx, sy); }
 
 
-    public void pushMatrix() {
-        System.out.println("matrixStack");
-        System.out.println(matrixStack);
-        matrixStack.push();
-    }
+    public void pushMatrix() { matrixStack.push(); }
 
-    public void pushMatrix(Affine2 transform) {matrixStack.push(transform);}
+    public void pushMatrix(Affine2 transform) { matrixStack.push(transform); }
 
-    public void popMatrix() {matrixStack.pop();}
+    public void popMatrix() { matrixStack.pop(); }
 
     public Affine2 getTransform() {
         return new Affine2(matrixStack.transform);

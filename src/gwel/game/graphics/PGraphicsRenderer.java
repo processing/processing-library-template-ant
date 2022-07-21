@@ -5,15 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.opengl.PGraphicsOpenGL;
 
 public class PGraphicsRenderer extends Renderer {
 
     //private final PApplet parent;
     private PGraphics buffer;
     private final Color backgroundColor = new Color(1f, 1f, 1f, 0f);
-
-    private boolean recording = false;
-    private int frameNumber;
 
 
     public PGraphicsRenderer(PApplet parent) {
@@ -23,13 +21,17 @@ public class PGraphicsRenderer extends Renderer {
 
     public void setBackgroundColor(float r, float g, float b, float a) { backgroundColor.set(r, g, b, a); }
 
+    public int getBackgroundColor() { return Color.argb8888(backgroundColor); }
 
     public void setBufferSize(int width, int height) {
         buffer = parent.createGraphics(width, height);
-        //buffer.noStroke();
+        buffer.smooth();
     }
 
-    public void beginDraw() { buffer.beginDraw(); }
+    public void beginDraw() {
+        buffer.beginDraw();
+        buffer.noStroke();
+    }
 
     public void endDraw() { buffer.endDraw();}
 
@@ -80,55 +82,4 @@ public class PGraphicsRenderer extends Renderer {
         buffer.endShape();
          */
     }
-
-
-    /**
-     * Save the buffer to disk if recording and clear buffer
-     *
-     * Delete if outside SgAnimator
-     */
-    public void flush() {
-        if (recording) {
-            buffer.endDraw();
-            buffer.save(String.format("frames/frame-%03d.png", frameNumber++));
-            buffer.clear();
-            buffer.beginDraw();
-            buffer.background(backgroundColor.r*255f, backgroundColor.g*255f, backgroundColor.b*255f, backgroundColor.a*255f);
-        }
-    }
-
-
-    /**
-     * Shapes rendered will be saved to file
-     *
-     * Delete if outside SgAnimator
-     */
-    public void startRecording() {
-        startRecording(0);
-    }
-
-    /**
-     * Shapes rendered will be saved to file
-     *
-     * Delete if outside SgAnimator
-     */
-    public void startRecording(int startFrame) {
-        recording = true;
-        buffer = parent.createGraphics(parent.width, parent.height);
-        buffer.beginDraw();
-        buffer.background(backgroundColor.r*255f, backgroundColor.g*255f, backgroundColor.b*255f, backgroundColor.a*255f);
-        frameNumber = startFrame;
-    }
-
-    /**
-     * Delete if outside SgAnimator
-     */
-    public void stopRecording() {
-        recording = false;
-    }
-
-    /**
-     * Delete if outside SgAnimator
-     */
-    public boolean isRecording() { return recording; }
 }

@@ -122,22 +122,6 @@ public class PRenderer extends Renderer {
 	/**
 	 * Delete if outside SgAnimator
 	 */
-	public void drawMarker(float x, float y) {
-		Vector2 point = new Vector2(x, y);
-		getTransform().applyTo(point);
-		parent.strokeWeight(1);
-		parent.stroke(0, 0, 255);
-		parent.line(point.x-6, point.y, point.x+6, point.y);
-		parent.line(point.x, point.y-6, point.x, point.y+6);
-		parent.textSize(10);
-		parent.fill(0, 0, 255);
-		parent.text(x + ", " + y, point.x+4, point.y-2);
-	}
-
-
-	/**
-	 * Delete if outside SgAnimator
-	 */
 	public void drawPivot() {
 		if (selected != null) {
 			Vector2 point = selected.getLocalOrigin();
