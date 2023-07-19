@@ -132,7 +132,9 @@ ${line}
 		<delete dir="${sketchbook.location}/${folder}/${project.name}" />
   	  	<mkdir dir="${sketchbook.location}/${folder}/${project.name}" />
   		<copy todir="${sketchbook.location}/${folder}/${project.name}">
-  			<fileset dir="${project.tmp}/${project.name}"/>
+  			<fileset dir="${project.tmp}/${project.name}">
+				<exclude name="**/core.jar"/>
+			</fileset>
   		</copy> 
 	</target>
 	
@@ -172,7 +174,10 @@ ${line}
   			<fileset dir="${project.src}"/>
 	  	</copy>
 	  	<copy todir="${project.tmp}/${project.name}/${folder}">
-  			<fileset dir="${project.lib}" excludes="README" />
+  			<fileset dir="${project.lib}">
+				<exclude name="README"/>
+				<exclude name="**/core.jar"/>
+			</fileset>
 	  	</copy>
 	</target>
 	
