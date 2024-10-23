@@ -313,10 +313,15 @@ ${line}
   		
   		<copy file="${project.dist.version}/tmp/${project.name}/library.properties" tofile="${project.dist.version}/web/download/${project.name}.txt" />
 		        
-		<zip destfile="${project.dist.version}/${project.name}.zip"
-  	       basedir="${project.dist.version}/tmp"
-  	       excludes="**/.DS_Store"
-		/>
+		<zip destfile="${project.dist.version}/${project.name}.zip">
+			<fileset dir="${project.dist.version}/tmp">
+			    <exclude name="**/.DS_Store"/>
+				<exclude name="**/examples/**"/>
+			</fileset>
+			<zipfileset dir="${project.dist.version}/tmp" filemode="444">
+				<include name="**/examples/**"/>
+			</zipfileset>
+		</zip>
 		
         <move file="${project.dist.version}/${project.name}.zip" todir="${project.dist.version}/web/download" />
 		
