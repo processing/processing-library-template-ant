@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository has been deprecated and will no longer be updated. For the latest library template, see [processing/processing-library-template](processing/processing-library-template)
+
 The following describes how to set up a Processing Library project in Eclipse and build it successfully, and to make your Library ready for distribution.
 
 ## Import to Eclipse
